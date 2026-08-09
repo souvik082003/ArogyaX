@@ -245,7 +245,8 @@ def seed_demo():
     patients = [
         {'username': 'john_patient', 'email': 'john@example.com', 'phone': '+91 9111111111'},
         {'username': 'priti_patient', 'email': 'priti@example.com', 'phone': '+91 9222222222'},
-        {'username': 'aman_patient', 'email': 'aman@example.com', 'phone': '+91 9333333333'},
+        {'username': 'karan_patient', 'email': 'karan@example.com', 'phone': '+91 9444444444'},
+        {'username': 'sara_patient', 'email': 'sara@example.com', 'phone': '+91 9555555555'},
     ]
     patient_ids = {}
     for p in patients:
@@ -272,10 +273,10 @@ def seed_demo():
              'phone_number': '+91 9222222222', 'email': 'priti@example.com',
              'type_of_doctor': 'Ophthalmologist', 'status': 'Pending',
              'user_id': patient_ids.get('priti_patient'), 'created_at': datetime.utcnow()},
-            {'name': 'Aman Rao', 'age': 42, 'blood_group': 'A+', 'time_slot': '02:00 PM - 03:00 PM',
-             'phone_number': '+91 9333333333', 'email': 'aman@example.com',
+            {'name': 'Karan Singh', 'age': 42, 'blood_group': 'A+', 'time_slot': '02:00 PM - 03:00 PM',
+             'phone_number': '+91 9444444444', 'email': 'karan@example.com',
              'type_of_doctor': 'Neurologist', 'status': 'Prescribed',
-             'user_id': patient_ids.get('aman_patient'), 'prescription_file': None,
+             'user_id': patient_ids.get('karan_patient'), 'prescription_file': None,
              'created_at': datetime.utcnow()},
             {'name': 'John Doe', 'age': 35, 'blood_group': 'O+', 'time_slot': '03:00 PM - 04:00 PM',
              'phone_number': '+91 9111111111', 'email': 'john@example.com',

@@ -29,6 +29,18 @@ With integrated **E-Pharmacy** ordering, a secure **Patient Vault**, professiona
 ## 🚀 Key Workflows
 
 ### 🏥 The Patient Workflow
+
+```mermaid
+graph TD
+    A([Registration]) --> B[Dashboard]
+    B --> C[Medical Vault]
+    B --> D[AI Diagnostics]
+    B --> E[Book Appointment]
+    E --> F[Consultation]
+    F --> G[Download Prescription]
+    G --> H([E-Pharmacy Order])
+```
+
 1. **Registration & Onboarding:** Patients create an account and access their personalized dashboard.
 2. **Medical Vault:** Patients can seamlessly drag-and-drop their past medical history (Lab Reports, X-Rays, PDFs) into their private, secure Medical Vault.
 3. **AI Diagnostics (Optional):** If a patient feels unwell, they can use the AI Symptom Checker or upload scans (Brain, Lung, Cataract) for an initial AI analysis powered by Gemini 2.5 Flash.
@@ -37,6 +49,16 @@ With integrated **E-Pharmacy** ordering, a secure **Patient Vault**, professiona
 6. **E-Pharmacy:** Once the doctor prescribes medicine, a "Download PDF" and "Order Medicines" button appears instantly on the patient's dashboard, allowing them to order their medicines via our integrated Apollo Pharmacy portal.
 
 ### 🩺 The Doctor Workflow
+
+```mermaid
+graph TD
+    A([Doctor Dashboard]) --> B[Approve Appointments]
+    B --> C[Review Patient Vault]
+    C --> D[Consultation]
+    D --> E[Prescribe Medicine]
+    E --> F([Generate Clinic-Grade PDF])
+```
+
 1. **Dashboard & Schedule:** Doctors log into their portal to view a complete list of their upcoming and pending appointments.
 2. **Appointment Approval:** Doctors review incoming requests and approve them.
 3. **Reviewing Medical History:** Before seeing the patient, the doctor can click "View Records" to access the patient's personal Medical Vault and review their historical lab reports and X-rays.
@@ -119,8 +141,12 @@ You can generate test data by visiting `/seed-demo` after starting the server. T
 |------|----------|----------|
 | **Admin** | `admin` | `admin123` |
 | **Doctor** | `dr_anika` | `doctor123` |
+| **Doctor** | `dr_rahul` | `doctor123` |
+| **Doctor** | `dr_priya` | `doctor123` |
 | **Patient** | `john_patient` | `patient123` |
-| **Patient** | `aman_patient` | `patient123` |
+| **Patient** | `priti_patient` | `patient123` |
+| **Patient** | `karan_patient` | `patient123` |
+| **Patient** | `sara_patient` | `patient123` |
 
 ---
 
