@@ -22,8 +22,6 @@
 
 **ArogyaX** is a full-stack, AI-powered hospital management system built with Flask and MongoDB Atlas. It provides role-based dashboards for **Patients**, **Doctors**, and **Admins**, along with cutting-edge AI features like symptom-based disease prediction, cataract/brain tumor/lung scan analysis, and an integrated telemedicine video call system.
 
-> **Built for the GFG HackForHealth Hackathon** — Redefining the way we access healthcare.
-
 ---
 
 ## 🚀 Key Features
