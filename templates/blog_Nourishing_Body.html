@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nourishing Body — ArogyaX Blog</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            {% if username %}<div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+            </div>
+            {% else %}<a href="{{url_for('login')}}" class="btn-nav">Login</a>{% endif %}
+        </nav>
+    </header>
+    <div class="page-container">
+        <div style="margin-bottom:1.5rem;"><a href="/" style="color:var(--text-muted);font-size:0.85rem;"><i
+                    class="fas fa-arrow-left"></i> Back</a></div>
+        <div class="page-hero">
+            <div
+                style="color:var(--primary);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+                <i class="fas fa-apple-alt" style="margin-right:6px;"></i>Nutrition</div>
+            <h1>Nourishing <span>Body</span></h1>
+            <p>The science of nutrition and its powerful role in disease prevention and overall well-being.</p>
+        </div>
+        <div class="content-card">
+            <h2>Food as Medicine</h2>
+            <p>What we eat directly affects our health, energy, and longevity. A well-balanced diet rich in whole foods,
+                vitamins, and minerals forms the cornerstone of good health and disease prevention.</p>
+            <h2>Key Nutritional Principles</h2>
+            <ul>
+                <li><strong>Macronutrients</strong> — Balance carbohydrates, proteins and healthy fats for sustained
+                    energy</li>
+                <li><strong>Micronutrients</strong> — Vitamins and minerals are critical for immune function and
+                    cellular repair</li>
+                <li><strong>Hydration</strong> — Adequate water intake supports every bodily process</li>
+                <li><strong>Gut Health</strong> — Probiotics and fiber support a healthy microbiome, linked to immunity
+                    and mood</li>
+            </ul>
+            <h2>Foods That Heal</h2>
+            <p>Incorporate anti-inflammatory foods like turmeric, leafy greens, berries, and fatty fish into your diet.
+                These foods are rich in antioxidants that fight cellular damage and reduce the risk of chronic disease.
+            </p>
+            <p>Reduce processed foods, refined sugars, and trans fats. A Mediterranean-style or plant-forward diet has
+                strong scientific evidence for longevity and heart health.</p>
+        </div>
+    </div>
+    <section class="footer">
+        <div class="credit">© 2024 <span>ArogyaX</span> — All rights reserved.</div>
+    </section>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

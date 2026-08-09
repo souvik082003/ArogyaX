@@ -1,0 +1,41 @@
+<!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../static/images/arogyax_logo.png" alt="Logo">
+                <div>
+                    <div>ArogyaX</div>
+                    <div class="logo-sub">Doctor Portal</div>
+                </div>
+            </div>
+            <div class="sidebar-section">Main Menu</div>
+            <nav class="sidebar-nav">
+                <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{url_for('doctor_patients')}}"><i class="fas fa-users"></i> My Patients</a>
+                <a href="{{url_for('doctor_profile_edit')}}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+                <a href="{{url_for('disease_predict')}}"><i class="fas fa-brain"></i> Disease Predict</a>
+                <a href="{{url_for('videocall')}}"><i class="fas fa-video"></i> Video Call</a>
+            </nav>
+            <div class="sidebar-section">Quick Actions</div>
+            <nav class="sidebar-nav">
+                <a href="{{url_for('braintumor')}}"><i class="fas fa-brain"></i> Brain Scan</a>
+                <a href="{{url_for('lung')}}"><i class="fas fa-lungs"></i> Lung Scan</a>
+                <a href="{{url_for('cataract')}}"><i class="fas fa-eye"></i> Eye Scan</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    {% if doctor.profile_photo %}
+                    <img src="../static/{{ doctor.profile_photo }}" alt="Photo" class="sidebar-photo">
+                    {% else %}
+                    <div class="avatar">{{ username[0]|upper }}</div>
+                    {% endif %}
+                    <div class="info">
+                        <div class="name">Dr. {{ username }}</div>
+                        <div class="role">{{ doctor.type_of_doctor }}</div>
+                    </div>
+                </div>
+                <nav class="sidebar-nav" style="margin-top:0.4rem;">
+                    <a href="{{url_for('doctor_profile_edit')}}"><i class="fas fa-user-edit"></i> Edit Profile</a>
+                    <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </nav>
+            </div>
+        </aside>

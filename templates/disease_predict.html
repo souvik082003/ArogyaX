@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disease Prediction — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            <a href="{{url_for('doctors_directory')}}">Doctors</a>
+            <div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+            </div>
+            <a href="{{url_for('logout')}}" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem;"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <div class="predict-container">
+        <div class="page-hero">
+            <div
+                style="display:inline-flex;align-items:center;gap:10px;background:rgba(232,88,26,0.1);border:1px solid var(--border-active);padding:6px 18px;border-radius:50px;margin-bottom:1.2rem;">
+                <i class="fas fa-brain" style="color:var(--primary);"></i>
+                <span style="font-size:0.82rem;font-weight:600;color:var(--primary);">AI-Powered — Gemini + ML
+                    Model</span>
+            </div>
+            <h1>Disease <span>Prediction</span></h1>
+            <p>Select your symptoms below. Our machine learning model predicts the disease, and Gemini AI provides a
+                clear explanation with health guidance.</p>
+        </div>
+
+        <div class="form-card" style="margin-bottom:1.5rem;">
+            <h2 style="font-size:1.3rem;margin-bottom:0.4rem;"><i class="fas fa-stethoscope"
+                    style="color:var(--primary);margin-right:10px;"></i>Select Your Symptoms</h2>
+            <p class="form-sub">Choose up to 5 symptoms you are experiencing.</p>
+            <form action="{{url_for('disease_predict')}}" method="POST">
+                <div class="form-grid-2">
+                    {% for i in range(1,6) %}
+                    <div class="form-group">
+                        <label>Symptom {{ i }}</label>
+                        <div class="input-icon">
+                            <i class="fas fa-plus-circle"></i>
+                            <select name="Symptom{{ i }}">
+                                <option value="">— Select a symptom —</option>
+                                {% for s in symptoms %}
+                                <option value="{{ s }}">{{ s.replace('_',' ')|title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn-submit" style="margin-top:0.5rem;">
+                    <i class="fas fa-magic" style="margin-right:8px;"></i>Predict Disease
+                </button>
+            </form>
+        </div>
+
+        {% if disease %}
+        <!-- ML Prediction Result -->
+        <div class="predict-result" style="margin-bottom:1.5rem;">
+            <div style="font-size:2.5rem;"><i class="fas fa-diagnoses" style="color:var(--primary);"></i></div>
+            <div>
+                <div
+                    style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;font-weight:600;margin-bottom:5px;">
+                    Predicted Disease</div>
+                <div class="disease-name">{{ disease }}</div>
+                <div class="confidence">
+                    <i class="fas fa-chart-bar" style="margin-right:5px;color:var(--primary);"></i>
+                    Model confidence: <strong style="color:var(--primary);">{{ "%.1f"|format(confidence_score)
+                        }}%</strong>
+                </div>
+                <div style="margin-top:0.6rem;">
+                    <div style="background:var(--bg-input);border-radius:50px;height:6px;width:250px;overflow:hidden;">
+                        <div
+                            style="background:linear-gradient(90deg,var(--primary),var(--primary-light));width:{{ [confidence_score,100]|min }}%;height:100%;border-radius:50px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if gemini_explanation %}
+        <!-- Gemini AI Explanation -->
+        <div class="content-card" style="border-color:var(--border-active);margin-bottom:1.5rem;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:1rem;">
+                <div
+                    style="width:36px;height:36px;background:linear-gradient(135deg,#4285F4,#0F9D58);border-radius:10px;display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-robot" style="color:#fff;font-size:0.9rem;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:700;font-size:0.95rem;">Gemini AI Explanation</div>
+                    <div style="font-size:0.75rem;color:var(--text-muted);">Powered by Google Gemini 1.5 Flash</div>
+                </div>
+            </div>
+            <div style="color:var(--text-secondary);font-size:0.9rem;line-height:1.8;white-space:pre-wrap;">{{
+                gemini_explanation }}</div>
+        </div>
+        {% elif gemini_enabled %}
+        <div class="alert alert-info" style="margin-bottom:1.5rem;">
+            <i class="fas fa-robot"></i><span>Gemini AI explanation not available for this prediction. Try again.</span>
+        </div>
+        {% endif %}
+
+        <!-- Disclaimer -->
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i>
+            <span><strong>Important Disclaimer:</strong> This AI prediction is for informational purposes only and does
+                not replace professional medical advice. Please consult a qualified healthcare provider for proper
+                diagnosis and treatment.</span>
+        </div>
+        {% endif %}
+
+        {% if not gemini_enabled %}
+        <div class="alert alert-info" style="margin-top:1rem;">
+            <i class="fas fa-info-circle"></i>
+            <span>Add your <code>GEMINI_API_KEY</code> to <code>.env</code> to enable AI-powered explanations.</span>
+        </div>
+        {% endif %}
+    </div>
+    <script src="../static/js/script.js"></script>
+</main></div></body>
+
+</html>

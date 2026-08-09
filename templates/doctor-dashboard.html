@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Dashboard — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+
+        {% include 'partials/doctor_sidebar.html' %}
+
+        <!-- MAIN -->
+        <main class="dashboard-main">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div style="flex:1;">
+                    {% if doctor.profile_photo %}
+                    <img src="../static/{{ doctor.profile_photo }}" alt="Profile" class="welcome-doctor-photo">
+                    {% endif %}
+                    <div>
+                        <div class="welcome-pre">Good day, Doctor 👋</div>
+                        <h2>Dr. {{ username }}</h2>
+                        <p style="color:rgba(255,255,255,0.8);margin-top:4px;font-size:0.9rem;">
+                            {{ doctor.type_of_doctor }} &nbsp;·&nbsp;
+                            {{ doctor.years_of_experience or 0 }} yrs experience &nbsp;·&nbsp;
+                            ₹{{ doctor.consultation_fee or 0 }} / visit
+                        </p>
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                    <a href="{{url_for('doctor_profile_edit')}}" class="btn btn-outline"
+                        style="color:#fff;border-color:rgba(255,255,255,0.4);"><i class="fas fa-user-edit"></i> Edit
+                        Profile</a>
+                    <a href="{{url_for('doctors_directory')}}" class="btn btn-outline"
+                        style="color:#fff;border-color:rgba(255,255,255,0.4);"><i class="fas fa-stethoscope"></i> Doctor
+                        Directory</a>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                    <div class="stat-value">{{ appointments|length }}</div>
+                    <div class="stat-label">Total Appointments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon pending-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-value">{{ appointments|selectattr('status','eq','Pending')|list|length }}</div>
+                    <div class="stat-label">Pending Review</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon approved-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-value">{{ appointments|selectattr('status','eq','Approved')|list|length }}</div>
+                    <div class="stat-label">Approved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon prescribed-icon"><i class="fas fa-file-prescription"></i></div>
+                    <div class="stat-value">{{ appointments|selectattr('status','eq','Prescribed')|list|length }}</div>
+                    <div class="stat-label">Prescribed</div>
+                </div>
+            </div>
+
+            <!-- Profile completeness -->
+            {% if not doctor.bio or not doctor.profile_photo %}
+            <div class="alert alert-info" style="margin-bottom:1.5rem;">
+                <i class="fas fa-info-circle"></i>
+                <span>Your profile is incomplete. <a href="{{url_for('doctor_profile_edit')}}"
+                        style="color:var(--primary);font-weight:600;">Add your photo, bio, and experience</a> so
+                    patients can find you.</span>
+            </div>
+            {% endif %}
+
+            <!-- Appointments table -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-calendar-alt" style="color:var(--primary);margin-right:8px;"></i>Patient
+                        Appointments</h3>
+                    <a href="{{url_for('doctor_patients')}}">View All</a>
+                </div>
+                {% if appointments %}
+                <div class="appt-table-wrap">
+                    <table class="appt-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Patient</th>
+                                <th>Age / Blood</th>
+                                <th>Time Slot</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in appointments[:8] %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="name">{{ appt.name }}</span></td>
+                                <td>{{ appt.age }} / <span style="color:var(--primary-light);">{{ appt.blood_group
+                                        }}</span></td>
+                                <td>{{ appt.time_slot }}</td>
+                                <td style="font-size:0.78rem;">
+                                    <div>{{ appt.phone_number }}</div>
+                                    <div style="color:var(--text-muted);">{{ appt.email }}</div>
+                                </td>
+                                <td>
+                                    {% if appt.status == 'Approved' %}<span class="badge badge-approved"><i
+                                            class="fas fa-check"></i> Approved</span>
+                                    {% elif appt.status == 'Pending' %}<span class="badge badge-pending"><i
+                                            class="fas fa-clock"></i> Pending</span>
+                                    {% elif appt.status == 'Prescribed' %}<span class="badge badge-prescribed"><i
+                                            class="fas fa-file-prescription"></i> Prescribed</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display:flex;gap:5px;flex-wrap:wrap;">
+                                        {% if appt.status == 'Pending' %}
+                                        <a href="{{url_for('approve_appointment', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-approve"><i class="fas fa-check"></i> Approve</a>
+                                        {% endif %}
+                                        {% if appt.status == 'Approved' %}
+                                        <a href="{{url_for('prescribe_medicine', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-prescribe"><i class="fas fa-prescription"></i>
+                                            Prescribe</a>
+                                        {% endif %}
+                                        {% if appt.status == 'Prescribed' %}
+                                        <a href="{{url_for('view_prescription', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-view"><i class="fas fa-download"></i> PDF</a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="appt-table-wrap">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No appointments yet. Patients will appear here when they book with you.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

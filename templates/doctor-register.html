@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register as Doctor — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <div class="brand">
+                <img src="../static/images/arogyax_logo.png" alt="ArogyaX">
+                <span>ArogyaX</span>
+            </div>
+            <h2>Join as a <span>Doctor</span></h2>
+            <p>Register as a specialist doctor on ArogyaX. Manage appointments, issue e-prescriptions, and care
+                for patients digitally.</p>
+            <div class="auth-features">
+                <div class="feat"><i class="fas fa-stethoscope"></i> Manage Patient Appointments</div>
+                <div class="feat"><i class="fas fa-file-prescription"></i> Issue E-Prescriptions</div>
+                <div class="feat"><i class="fas fa-users"></i> View Patient Records</div>
+                <div class="feat"><i class="fas fa-video"></i> Conduct Video Consultations</div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <h3>Doctor Registration</h3>
+            <p class="sub">Create your professional healthcare account</p>
+
+            <form action="{{url_for('doctor_register')}}" method="POST">
+                <div class="form-group">
+                    <label>Full Name / Username</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user-md"></i>
+                        <input type="text" name="username" placeholder="Dr. Your Name" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="doctor@hospital.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Create a strong password" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Specialization</label>
+                    <div class="input-icon">
+                        <i class="fas fa-stethoscope"></i>
+                        <input type="text" name="type_of_doctor" placeholder="e.g. Cardiologist, Neurologist" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Register as Doctor <i class="fas fa-arrow-right"></i></button>
+            </form>
+
+            <div class="form-footer" style="margin-top:1.2rem;">
+                Already have an account? <a href="{{url_for('login')}}">Sign In</a>
+            </div>
+            <div style="text-align:center;margin-top:0.6rem;">
+                Are you a patient? <a href="{{url_for('register')}}"
+                    style="color:var(--primary);font-weight:600;">Register as Patient</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

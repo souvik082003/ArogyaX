@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Appointment — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            <a href="{{url_for('doctors_directory')}}">Doctors</a>
+            <a href="{{url_for('logout')}}" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem;"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+            <div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>
+                {{ username }}
+            </div>
+        </nav>
+    </header>
+
+    <div class="book-container">
+        <div style="margin-bottom:1.5rem;">
+            <a href="/" style="color:var(--text-muted);font-size:0.85rem;"><i class="fas fa-arrow-left"></i> Back to
+                Dashboard</a>
+        </div>
+
+        <div class="page-hero" style="margin-bottom:2rem;">
+            <h1>Book an <span>Appointment</span></h1>
+            <p>Choose your doctor and fill in your details to request an appointment.</p>
+        </div>
+
+        <!-- Doctor Cards Selection -->
+        {% if doctors %}
+        <div class="dash-section" style="margin-bottom:2rem;">
+            <div class="dash-section-header">
+                <h3><i class="fas fa-user-md" style="color:var(--primary);margin-right:8px;"></i>Available Doctors</h3>
+            </div>
+            <div class="doctors-grid-sm">
+                {% for doc in doctors %}
+                <div class="doctor-card-sm" onclick="selectDoctor('{{ doc.type_of_doctor }}')"
+                    id="doc-card-{{ loop.index }}" data-spec="{{ doc.type_of_doctor }}">
+                    {% if doc.profile_photo %}
+                    <img src="../static/{{ doc.profile_photo }}" alt="Dr {{ doc.username }}" class="doctor-photo-sm">
+                    {% else %}
+                    <div class="doctor-avatar-sm">{{ doc.username[0]|upper }}</div>
+                    {% endif %}
+                    <div style="flex:1;">
+                        <div style="font-weight:700;font-size:0.9rem;">Dr. {{ doc.username }}</div>
+                        <div style="color:var(--primary);font-size:0.78rem;font-weight:600;">{{ doc.type_of_doctor }}
+                        </div>
+                        <div style="color:var(--text-muted);font-size:0.75rem;margin-top:2px;">
+                            <i class="fas fa-briefcase-medical" style="margin-right:4px;"></i>{{ doc.years_of_experience
+                            or 0 }} yrs &nbsp;
+                            <i class="fas fa-rupee-sign" style="margin-right:2px;"></i>{{ doc.consultation_fee or 0 }}
+                        </div>
+                        {% if doc.availability %}
+                        <div style="color:var(--text-muted);font-size:0.72rem;"><i class="fas fa-clock"
+                                style="margin-right:3px;"></i>{{ doc.availability }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="doc-select-check" id="check-{{ loop.index }}"><i class="fas fa-check-circle"></i></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Booking Form -->
+        <div class="form-card">
+            <h2><i class="fas fa-calendar-plus" style="color:var(--primary);margin-right:10px;"></i>Appointment Details
+            </h2>
+            <p class="form-sub">Fill in your information below to complete the booking.</p>
+
+            <form action="{{url_for('book_appointment')}}" method="POST">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Patient Full Name</label>
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" name="name" placeholder="Enter your full name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <div class="input-icon">
+                            <i class="fas fa-birthday-cake"></i>
+                            <input type="number" name="age" placeholder="Your age" min="1" max="120" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Blood Group</label>
+                        <div class="input-icon">
+                            <i class="fas fa-tint"></i>
+                            <select name="blood_group" required>
+                                <option value="" disabled selected>Select Blood Group</option>
+                                <option>A+</option>
+                                <option>A-</option>
+                                <option>B+</option>
+                                <option>B-</option>
+                                <option>AB+</option>
+                                <option>AB-</option>
+                                <option>O+</option>
+                                <option>O-</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Time Slot</label>
+                        <div class="input-icon">
+                            <i class="fas fa-clock"></i>
+                            <select name="time_slot" required>
+                                <option value="" disabled selected>Select Time Slot</option>
+                                <option>09:00 AM - 10:00 AM</option>
+                                <option>10:00 AM - 11:00 AM</option>
+                                <option>11:00 AM - 12:00 PM</option>
+                                <option>12:00 PM - 01:00 PM</option>
+                                <option>02:00 PM - 03:00 PM</option>
+                                <option>03:00 PM - 04:00 PM</option>
+                                <option>04:00 PM - 05:00 PM</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <div class="input-icon">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" name="phone_number" placeholder="+91 XXXXXXXXXX" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <div class="input-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" name="email" placeholder="your@email.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Doctor Specialization</label>
+                    <div class="input-icon">
+                        <i class="fas fa-stethoscope"></i>
+                        <select name="type_of_doctor" id="specialization-select" required>
+                            <option value="" disabled selected>Choose a specialist</option>
+                            {% for doc in doctors %}
+                            <option value="{{ doc.type_of_doctor }}">{{ doc.type_of_doctor }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+                    <button type="submit" class="btn-submit" style="flex:1;">Confirm Appointment <i
+                            class="fas fa-calendar-check"></i></button>
+                    <a href="/" class="btn btn-outline" style="flex:1;justify-content:center;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../static/js/script.js"></script>
+    <script>
+        function selectDoctor(specialization) {
+            // Highlight the selected doctor card
+            document.querySelectorAll('.doctor-card-sm').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.doc-select-check').forEach(c => c.classList.remove('visible'));
+
+            const cards = document.querySelectorAll('.doctor-card-sm');
+            cards.forEach((c, i) => {
+                if (c.dataset.spec === specialization) {
+                    c.classList.add('selected');
+                    document.getElementById('check-' + (i + 1)).classList.add('visible');
+                }
+            });
+
+            // Set the select dropdown
+            const sel = document.getElementById('specialization-select');
+            for (let i = 0; i < sel.options.length; i++) {
+                if (sel.options[i].value === specialization) {
+                    sel.selectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        // Pre-select if coming from /doctors page with ?specialization=
+        const urlParams = new URLSearchParams(window.location.search);
+        const spec = urlParams.get('specialization');
+        if (spec) selectDoctor(spec);
+    </script>
+</body>
+
+</html>

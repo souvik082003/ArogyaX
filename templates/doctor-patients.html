@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Patients — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        {% include 'partials/doctor_sidebar.html' %}
+
+        <main class="dashboard-main">
+            <div class="dash-header">
+                <div>
+                    <h1>My Patients</h1>
+                    <p>All appointments assigned to Dr. {{ username }} — {{ doctor.type_of_doctor }}</p>
+                </div>
+            </div>
+
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-users" style="color:var(--primary);margin-right:8px;"></i>Patient Appointments
+                    </h3>
+                    <span style="color:var(--text-muted);font-size:0.85rem;">{{ appointments|length }} total</span>
+                </div>
+
+                {% if appointments %}
+                <div class="appt-table-wrap">
+                    <table class="appt-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Blood Group</th>
+                                <th>Contact</th>
+                                <th>Time Slot</th>
+                                <th>Medical History</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in appointments %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="name">{{ appt.name }}</span></td>
+                                <td>{{ appt.age }}</td>
+                                <td><span
+                                        style="background:var(--primary-glow);border:1px solid var(--border-active);padding:2px 8px;border-radius:4px;font-size:0.78rem;color:var(--primary-light);">{{
+                                        appt.blood_group }}</span></td>
+                                <td style="font-size:0.8rem;">
+                                    <div>{{ appt.phone_number }}</div>
+                                    <div style="color:var(--text-muted);">{{ appt.email }}</div>
+                                </td>
+                                <td>{{ appt.time_slot }}</td>
+                                <td>
+                                    <a href="{{url_for('view_records', patient_id=appt.user_id)}}" class="btn-xs" style="background:var(--bg-card); color:var(--primary); border: 1px solid var(--primary); text-decoration:none;"><i class="fas fa-folder-open"></i> View Records</a>
+                                </td>
+                                <td>
+                                    {% if appt.status == 'Approved' %}
+                                    <span class="badge badge-approved"><i class="fas fa-check"></i> Approved</span>
+                                    {% elif appt.status == 'Pending' %}
+                                    <span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
+                                    {% elif appt.status == 'Prescribed' %}
+                                    <span class="badge badge-prescribed"><i class="fas fa-file-prescription"></i>
+                                        Prescribed</span>
+                                    {% else %}
+                                    <span class="badge">{{ appt.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                                        {% if appt.status == 'Pending' %}
+                                        <a href="{{url_for('approve_appointment', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-approve"><i class="fas fa-check"></i> Approve</a>
+                                        {% endif %}
+                                        {% if appt.status == 'Approved' %}
+                                        <a href="{{url_for('prescribe_medicine', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-prescribe"><i class="fas fa-prescription"></i> Prescribe</a>
+                                        {% endif %}
+                                        {% if appt.status == 'Prescribed' %}
+                                        <a href="{{url_for('view_prescription', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-view"><i class="fas fa-download"></i> Download PDF</a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="appt-table-wrap">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No patients assigned yet.</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

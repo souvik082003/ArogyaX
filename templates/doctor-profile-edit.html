@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit My Profile — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+        <!-- SIDEBAR -->
+        {% include 'partials/doctor_sidebar.html' %}
+
+        <!-- MAIN -->
+        <main class="dashboard-main">
+            <div class="dash-header">
+                <div>
+                    <h1>Edit My <span style="color:var(--primary);">Profile</span></h1>
+                    <p>Update your professional information visible to patients.</p>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for cat, msg in messages %}
+            <div class="alert alert-{{ 'success' if cat == 'success' else 'danger' }}" style="margin-bottom:1rem;">
+                <i class="fas fa-{{ 'check-circle' if cat == 'success' else 'exclamation-circle' }}"></i><span>{{ msg
+                    }}</span>
+            </div>
+            {% endfor %}{% endif %}
+            {% endwith %}
+
+            <div style="display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start;">
+                <!-- Photo card -->
+                <div class="glass" style="padding:2rem;text-align:center;min-width:220px;">
+                    <div id="photoPreview">
+                        {% if user.profile_photo %}
+                        <img src="../static/{{ user.profile_photo }}" alt="Profile Photo" class="doctor-photo-lg">
+                        {% else %}
+                        <div class="avatar-xl">{{ username[0]|upper }}</div>
+                        {% endif %}
+                    </div>
+                    <div style="font-size:0.85rem;color:var(--text-muted);margin-top:1rem;">Dr. {{ username }}</div>
+                    <div style="font-size:0.8rem;color:var(--primary);font-weight:600;">{{ user.type_of_doctor or
+                        'Specialist' }}</div>
+                    <div style="margin-top:0.5rem;">
+                        <span class="badge badge-approved">{{ user.years_of_experience or 0 }} yrs exp</span>
+                        <span class="badge badge-prescribed">₹{{ user.consultation_fee or 0 }}</span>
+                    </div>
+                </div>
+
+                <!-- Form card -->
+                <div class="form-card">
+                    <form action="{{url_for('doctor_profile_edit')}}" method="POST" enctype="multipart/form-data">
+
+                        <h3
+                            style="margin-bottom:1.2rem;font-size:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;font-weight:700;">
+                            📍 Profile Photo</h3>
+                        <div class="form-group">
+                            <label>Upload Photo</label>
+                            <div class="upload-box" onclick="document.getElementById('photoInput').click()"
+                                style="padding:1rem;min-height:80px;">
+                                <i class="fas fa-camera"></i>
+                                <p style="font-size:0.85rem;">Click to select a photo (JPG, PNG &lt;5MB)</p>
+                                <input type="file" id="photoInput" name="profile_photo" accept="image/*"
+                                    style="display:none;" onchange="previewPhoto(this)">
+                            </div>
+                        </div>
+
+                        <h3
+                            style="margin:1.5rem 0 1.2rem;font-size:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;font-weight:700;">
+                            🩺 Professional Details</h3>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Specialization</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-stethoscope"></i>
+                                    <input type="text" name="type_of_doctor" value="{{ user.type_of_doctor or '' }}"
+                                        placeholder="e.g. Cardiologist">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Years of Experience</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-briefcase-medical"></i>
+                                    <input type="number" name="years_of_experience"
+                                        value="{{ user.years_of_experience or 0 }}" min="0" max="60">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Consultation Fee (₹)</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-rupee-sign"></i>
+                                    <input type="number" name="consultation_fee"
+                                        value="{{ user.consultation_fee or 0 }}" min="0">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" name="phone" value="{{ user.phone or '' }}"
+                                        placeholder="+91 98XXXXXXXX">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" name="email" value="{{ user.email }}" placeholder="your@email.com">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Availability / Schedule</label>
+                            <div class="input-icon">
+                                <i class="fas fa-calendar-check"></i>
+                                <input type="text" name="availability" value="{{ user.availability or '' }}"
+                                    placeholder="e.g. Mon–Fri, 10:00 AM – 5:00 PM">
+                            </div>
+                        </div>
+
+                        <h3
+                            style="margin:1.5rem 0 1rem;font-size:1rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;font-weight:700;">
+                            📝 About Me</h3>
+                        <div class="form-group">
+                            <label>Bio / About (visible to patients)</label>
+                            <textarea name="bio" rows="4"
+                                placeholder="Write a short description about your expertise, approach, and achievements...">{{ user.bio or '' }}</textarea>
+                        </div>
+
+                        <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+                            <button type="submit" class="btn-submit" style="flex:1;">Save Profile <i
+                                    class="fas fa-save"></i></button>
+                            <a href="/" class="btn btn-outline" style="flex:1;justify-content:center;">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function previewPhoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('photoPreview').innerHTML =
+                        `<img src="${e.target.result}" alt="Preview" class="doctor-photo-lg">`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

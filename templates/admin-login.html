@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+
+    <!-- Dynamic Animated Background (Admin Red Theme) -->
+    <div class="animated-bg">
+        <div class="bg-orb orb-1" style="background: #059669;"></div>
+        <div class="bg-orb orb-2" style="background: #10B981; bottom: -20%; right: -10%;"></div>
+        <div class="bg-orb orb-3" style="background: #047857;"></div>
+    </div>
+
+    <!-- Centered Glass Card -->
+    <div class="glass-auth-container">
+        <div class="glass-card" style="border-top: 4px solid #10B981;">
+            
+            <div class="brand-center">
+                <div class="admin-badge" style="margin-bottom: 1.5rem; display: inline-block;"><i class="fas fa-shield-alt"></i> Admin Portal</div>
+                <div>
+                    <img src="../static/images/arogyax_logo.png" alt="ArogyaX Logo">
+                </div>
+                <h2 style="background: linear-gradient(to right, #fff, #10B981); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Control Panel</h2>
+                <p>Restricted access. Authorized personnel only.</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-msg flash-{{ category }}" style="margin-bottom: 1.5rem; color: #10B981; text-align: center; font-size: 0.9rem;">
+                    <i class="fas fa-exclamation-triangle"></i> {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form action="{{url_for('admin_login')}}" method="POST" autocomplete="off">
+                
+                <div class="floating-group">
+                    <input type="text" name="username" id="username" placeholder=" " required autocomplete="off">
+                    <i class="fas fa-user-shield input-icon"></i>
+                    <label for="username">Admin Username</label>
+                </div>
+                
+                <div class="floating-group">
+                    <input type="password" name="password" id="pwd" placeholder=" " required>
+                    <i class="fas fa-lock input-icon"></i>
+                    <label for="pwd">Password</label>
+                </div>
+                
+                <div class="form-check" style="margin-bottom: 1.5rem;">
+                    <input type="checkbox" id="showPwd" onclick="document.getElementById('pwd').type=this.checked?'text':'password'">
+                    <label for="showPwd">Show Password</label>
+                </div>
+                
+                <button type="submit" class="btn-glow" style="background: linear-gradient(135deg, #10B981, #047857); box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);">
+                    Sign In to Control Panel <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="form-divider" style="margin-top: 2rem;"><span>System Tools</span></div>
+            
+            <div style="text-align:center; margin-bottom: 1.5rem;">
+                <a href="{{url_for('seed_demo')}}" style="color:var(--text-muted);font-size:0.85rem; text-decoration: none; transition: 0.2s;"><i class="fas fa-database"></i> Load Demo Data</a>
+            </div>
+
+            <div style="text-align:center;">
+                <a href="{{url_for('login')}}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Main Login</a>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>

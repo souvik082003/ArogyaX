@@ -1,0 +1,46 @@
+<!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../static/images/arogyax_logo.png" alt="Logo">
+                <div>
+                    <div>ArogyaX</div>
+                    <div class="logo-sub">Patient Portal</div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">Main Menu</div>
+            <nav class="sidebar-nav">
+                <a href="/" class="active"><i class="fas fa-home"></i> Dashboard</a>
+                <a href="{{url_for('book_appointment')}}"><i class="fas fa-calendar-plus"></i> Book Appointment</a>
+                <a href="{{url_for('disease_predict')}}"><i class="fas fa-robot"></i> Symptom Check</a>
+                <a href="{{url_for('videocall')}}"><i class="fas fa-video"></i> Video Call</a>
+                <a href="{{url_for('vault')}}"><i class="fas fa-folder-open"></i> Medical Vault</a>
+            </nav>
+
+            <div class="sidebar-section">Medical Scans</div>
+            <nav class="sidebar-nav">
+                <a href="{{url_for('braintumor')}}"><i class="fas fa-x-ray"></i> Brain Tumor</a>
+                <a href="{{url_for('lung')}}"><i class="fas fa-lungs"></i> Lung Scan</a>
+                <a href="{{url_for('cataract')}}"><i class="fas fa-eye"></i> Cataract</a>
+            </nav>
+
+            <div class="sidebar-section">Blogs</div>
+            <nav class="sidebar-nav">
+                <a href="{{url_for('Transforming_Healthcare')}}"><i class="fas fa-newspaper"></i> Transforming HC</a>
+                <a href="{{url_for('Holistic_Health')}}"><i class="fas fa-spa"></i> Holistic Health</a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar">{{ username[0]|upper }}</div>
+                    <div class="info">
+                        <div class="name">{{ username }}</div>
+                        <div class="role">Patient</div>
+                    </div>
+                </div>
+                <nav class="sidebar-nav" style="margin-top:0.4rem;">
+                    <a href="{{url_for('profile')}}"><i class="fas fa-user-circle"></i> My Profile</a>
+                    <a href="{{url_for('logout')}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </nav>
+            </div>
+        </aside>

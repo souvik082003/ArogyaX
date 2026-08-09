@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArogyaX — Your Healthcare Partner</title>
+    <meta name="description"
+        content="ArogyaX — AI-powered hospital management & telemedicine platform for patients and doctors.">
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="ArogyaX Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar" id="navbar">
+            {% if username %}
+            <a href="/">Home</a>
+            <a href="#services">Services</a>
+            <a href="#blogs">Blogs</a>
+            <a href="#about">About</a>
+            <a href="{{url_for('logout')}}" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem;">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            <div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>
+                {{ username }}
+            </div>
+            {% else %}
+            <a href="{{url_for('login')}}" class="btn-nav">Sign In</a>
+            {% endif %}
+        </nav>
+        <div id="menu-btn" class="fas fa-bars" onclick="document.getElementById('navbar').classList.toggle('open')">
+        </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="home" id="home">
+        <div class="content">
+            <div class="tag"><i class="fas fa-shield-heart"></i> Trusted Healthcare Platform</div>
+            <h1>Your Health, Our <span class="highlight">Priority</span> — Anytime, Anywhere</h1>
+            <p>ArogyaX is an AI-powered healthcare management platform connecting patients with specialist
+                doctors, enabling smart disease prediction, and streamlining appointment management.</p>
+            <div class="home-actions">
+                <a href="{{url_for('login')}}" class="btn-home">Get Started <span class="fas fa-arrow-right"></span></a>
+                <a href="#services" class="btn btn-outline">Explore Services</a>
+            </div>
+        </div>
+        <div class="image">
+            <img src="../static/images/doctors-animate.svg" alt="Healthcare Illustration">
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="icons-container" style="padding-top:0;">
+        <div class="glass">
+            <i class="fas fa-user-md"></i>
+            <h3>140+</h3>
+            <p>Specialist Doctors</p>
+        </div>
+        <div class="glass">
+            <i class="fas fa-video"></i>
+            <h3>1,400+</h3>
+            <p>Remote Consultations</p>
+        </div>
+        <div class="glass">
+            <i class="fas fa-users"></i>
+            <h3>5,000+</h3>
+            <p>Patients Served</p>
+        </div>
+        <div class="glass">
+            <i class="fas fa-file-medical"></i>
+            <h3>400+</h3>
+            <p>Health Reports</p>
+        </div>
+    </section>
+
+    {% if username %}
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+        <h1 class="heading">Services &amp; <span>Features</span></h1>
+        <p class="section-sub">Everything you need for comprehensive healthcare management</p>
+        <div class="box-container">
+            <div class="glass-box">
+                <i class="fas fa-calendar-check"></i>
+                <h3>Appointment Booking</h3>
+                <p>Book appointments with specialized doctors instantly. Choose your preferred time slot and get
+                    confirmed bookings.</p>
+                <a href="{{url_for('book_appointment')}}" class="btn btn-outline">Book Now <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-box">
+                <i class="fas fa-brain"></i>
+                <h3>Disease Prediction</h3>
+                <p>AI-powered disease prediction from your symptoms using a Decision Tree ML model trained on clinical
+                    data.</p>
+                <a href="{{url_for('disease_predict')}}" class="btn btn-outline">Predict Now <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-box">
+                <i class="fas fa-video"></i>
+                <h3>Video Consultation</h3>
+                <p>Connect face-to-face with your doctor via secure video call — no travel required.</p>
+                <a href="{{url_for('videocall')}}" class="btn btn-outline">Start Call <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-box">
+                <i class="fas fa-x-ray"></i>
+                <h3>Medical Scans AI</h3>
+                <p>Upload medical images for AI-assisted analysis — brain tumor, lung, and cataract detection.</p>
+                <a href="{{url_for('braintumor')}}" class="btn btn-outline">View Scans <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-box">
+                <i class="fas fa-pills"></i>
+                <h3>E-Prescriptions</h3>
+                <p>Doctors can prescribe medicines digitally. Patients get PDF prescriptions directly on their
+                    dashboard.</p>
+                <a href="{{url_for('profile')}}" class="btn btn-outline">My Profile <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="glass-box">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Secure & Private</h3>
+                <p>Your medical data is protected with end-to-end security and strict privacy controls.</p>
+                <a href="{{url_for('policy')}}" class="btn btn-outline">Privacy Policy <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- DOCTORS -->
+    <section class="doctors" id="doctors" style="padding: 3rem 6%;">
+        <h1 class="heading">Our <span>Doctors</span></h1>
+        <p class="section-sub">Expert specialists ready to care for you</p>
+        <div class="box-container">
+            <div class="glass-box">
+                <img src="../static/images/doc2.jpg" alt="Doctor">
+                <h3>Dr. Anika Sharma</h3>
+                <span>Cardiologist</span>
+                <div class="share">
+                    <a href="" class="fab fa-facebook-f"></a>
+                    <a href="" class="fab fa-twitter"></a>
+                    <a href="" class="fab fa-linkedin"></a>
+                </div>
+            </div>
+            <div class="glass-box">
+                <img src="../static/images/doc1.jpg" alt="Doctor">
+                <h3>Dr. Rahul Mehta</h3>
+                <span>Neurologist</span>
+                <div class="share">
+                    <a href="" class="fab fa-facebook-f"></a>
+                    <a href="" class="fab fa-twitter"></a>
+                    <a href="" class="fab fa-linkedin"></a>
+                </div>
+            </div>
+            <div class="glass-box">
+                <img src="../static/images/doc3.jpeg" alt="Doctor">
+                <h3>Dr. Priya Nair</h3>
+                <span>Ophthalmologist</span>
+                <div class="share">
+                    <a href="" class="fab fa-facebook-f"></a>
+                    <a href="" class="fab fa-twitter"></a>
+                    <a href="" class="fab fa-linkedin"></a>
+                </div>
+            </div>
+            <div class="glass-box">
+                <img src="../static/images/doc4.jpg" alt="Doctor">
+                <h3>Dr. Sandeep Kaur</h3>
+                <span>Pulmonologist</span>
+                <div class="share">
+                    <a href="" class="fab fa-facebook-f"></a>
+                    <a href="" class="fab fa-twitter"></a>
+                    <a href="" class="fab fa-linkedin"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BLOGS -->
+    <section class="blogs" id="blogs" style="padding: 3rem 6%;">
+        <h1 class="heading">Health <span>Blogs</span></h1>
+        <p class="section-sub">Stay informed with expert health articles</p>
+        <div class="box-container">
+            <div class="glass-box">
+                <div class="image"><img src="../static/images/bgimg2.jpg" alt="Blog"></div>
+                <div class="content">
+                    <div class="icon">
+                        <a href=""><i class="fas fa-calendar"></i> May 1, 2024</a>
+                        <a href=""><i class="fas fa-user"></i> by Admin</a>
+                    </div>
+                    <h3>Transforming Healthcare</h3>
+                    <p>How AI and telemedicine are reshaping modern healthcare delivery.</p>
+                    <a href="{{url_for('Transforming_Healthcare')}}" class="btn btn-outline"
+                        style="padding:7px 16px;font-size:0.8rem;">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="glass-box">
+                <div class="image"><img src="../static/images/bgimg2.jpg" alt="Blog"></div>
+                <div class="content">
+                    <div class="icon">
+                        <a href=""><i class="fas fa-calendar"></i> June 10, 2024</a>
+                        <a href=""><i class="fas fa-user"></i> by Admin</a>
+                    </div>
+                    <h3>Holistic Health</h3>
+                    <p>A comprehensive approach to mental, physical, and spiritual wellness.</p>
+                    <a href="{{url_for('Holistic_Health')}}" class="btn btn-outline"
+                        style="padding:7px 16px;font-size:0.8rem;">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="glass-box">
+                <div class="image"><img src="../static/images/bgimg2.jpg" alt="Blog"></div>
+                <div class="content">
+                    <div class="icon">
+                        <a href=""><i class="fas fa-calendar"></i> July 5, 2024</a>
+                        <a href=""><i class="fas fa-user"></i> by Admin</a>
+                    </div>
+                    <h3>Nourishing Body</h3>
+                    <p>Nutrition science and its powerful role in disease prevention.</p>
+                    <a href="{{url_for('Nourishing_Body')}}" class="btn btn-outline"
+                        style="padding:7px 16px;font-size:0.8rem;">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="glass-box">
+                <div class="image"><img src="../static/images/bgimg2.jpg" alt="Blog"></div>
+                <div class="content">
+                    <div class="icon">
+                        <a href=""><i class="fas fa-calendar"></i> Aug 3, 2024</a>
+                        <a href=""><i class="fas fa-user"></i> by Admin</a>
+                    </div>
+                    <h3>Importance of Sports</h3>
+                    <p>Why physical activity is an essential pillar of long-term health.</p>
+                    <a href="{{url_for('Importance_of_Games')}}" class="btn btn-outline"
+                        style="padding:7px 16px;font-size:0.8rem;">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+        <h1 class="heading">About <span>Us</span></h1>
+        <div class="row">
+            <div class="image">
+                <img src="../static/images/about-us-page-animate.svg" alt="About Us">
+            </div>
+            <div class="content">
+                <h3>We take care of your healthy life.</h3>
+                <p>ArogyaX is committed to making quality healthcare accessible to every Indian citizen. We
+                    leverage AI, telemedicine, and digital tools to bridge the gap between patients and specialist
+                    doctors.</p>
+                <p>From AI-powered disease prediction and medical scan analysis to instant appointment booking and
+                    digital prescriptions — we're redefining how healthcare works in India.</p>
+                <a href="{{url_for('login')}}" class="btn btn-primary">Start Your Journey <i
+                        class="fas fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <section class="footer">
+        <div class="box-container">
+            <div class="box">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;">
+                    <img src="../static/images/arogyax_logo.png" style="height:36px;border-radius:8px;"
+                        alt="logo">
+                    <div>
+                        <div style="font-weight:700;font-family:'Outfit',sans-serif;">ArogyaX</div>
+                        <div style="font-size:0.72rem;color:var(--primary);">Hospital Management System</div>
+                    </div>
+                </div>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.7;">Your AI-powered healthcare
+                    partner. Quality care, anytime, anywhere.</p>
+            </div>
+            <div class="box">
+                <h3>Quick Links</h3>
+                <a href="/"><i class="fas fa-chevron-right"></i> Home</a>
+                <a href="#services"><i class="fas fa-chevron-right"></i> Services</a>
+                <a href="#about"><i class="fas fa-chevron-right"></i> About</a>
+                <a href="#doctors"><i class="fas fa-chevron-right"></i> Doctors</a>
+                <a href="{{url_for('policy')}}"><i class="fas fa-chevron-right"></i> Privacy Policy</a>
+            </div>
+            <div class="box">
+                <h3>Our Services</h3>
+                <a href="{{url_for('book_appointment')}}"><i class="fas fa-chevron-right"></i> Book Appointment</a>
+                <a href="{{url_for('disease_predict')}}"><i class="fas fa-chevron-right"></i> Disease Prediction</a>
+                <a href="{{url_for('videocall')}}"><i class="fas fa-chevron-right"></i> Video Call</a>
+                <a href="{{url_for('braintumor')}}"><i class="fas fa-chevron-right"></i> Brain Tumor Scan</a>
+                <a href="{{url_for('lung')}}"><i class="fas fa-chevron-right"></i> Lung Scan</a>
+            </div>
+            <div class="box">
+                <h3>Contact Info</h3>
+                <a href=""><i class="fas fa-phone"></i> +91 9876543210</a>
+                <a href=""><i class="fas fa-envelope"></i> support@arogyax.com</a>
+                <a href=""><i class="fas fa-map-marker-alt"></i> Virtual Clinic</a>
+                <h3 style="margin-top:1.2rem;">Follow Us</h3>
+                <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+                    <a href=""
+                        style="width:32px;height:32px;background:var(--bg-card2);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:var(--transition);"
+                        class="fab fa-facebook-f"></a>
+                    <a href=""
+                        style="width:32px;height:32px;background:var(--bg-card2);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:var(--transition);"
+                        class="fab fa-twitter"></a>
+                    <a href=""
+                        style="width:32px;height:32px;background:var(--bg-card2);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:var(--transition);"
+                        class="fab fa-instagram"></a>
+                    <a href=""
+                        style="width:32px;height:32px;background:var(--bg-card2);border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);transition:var(--transition);"
+                        class="fab fa-linkedin"></a>
+                </div>
+            </div>
+        </div>
+        <div class="credit">© 2024 <span>ArogyaX</span> — Hospital Management System. All rights reserved.</div>
+    </section>
+
+    {% else %}
+
+    <div class="glass-hide">
+        <h1 class="heading">Want to <span>Know More?</span></h1>
+        <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:1rem;">Sign in to explore all features —
+            disease prediction, appointments, video calls and more.</p>
+        <a href="{{url_for('login')}}" class="btn-home">Login to Explore <span class="fas fa-chevron-right"></span></a>
+    </div>
+
+    <!-- Minimal Footer for non-logged-in users -->
+    <section class="footer">
+        <div class="credit">© 2026 <span>ArogyaX</span> — Hospital Management System. All rights reserved.</div>
+    </section>
+
+    {% endif %}
+
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

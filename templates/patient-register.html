@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register as Patient — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <div class="auth-wrapper">
+        <div class="auth-left">
+            <div class="brand">
+                <img src="../static/images/arogyax_logo.png" alt="ArogyaX">
+                <span>ArogyaX</span>
+            </div>
+            <h2>Join as a <span>Patient</span></h2>
+            <p>Create your free patient account and gain access to expert doctors, AI disease prediction, and a complete
+                digital health record.</p>
+            <div class="auth-features">
+                <div class="feat"><i class="fas fa-user-circle"></i> Personal Health Dashboard</div>
+                <div class="feat"><i class="fas fa-calendar-alt"></i> Easy Appointment Booking</div>
+                <div class="feat"><i class="fas fa-file-medical"></i> Digital Prescriptions</div>
+                <div class="feat"><i class="fas fa-brain"></i> AI Symptom Checker</div>
+            </div>
+        </div>
+
+        <div class="auth-right">
+            <h3>Patient Registration</h3>
+            <p class="sub">Fill in your details to create your account</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-msg flash-{{ category }}"><i class="fas fa-exclamation-circle"></i> {{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form action="{{url_for('register')}}" method="POST">
+                <div class="form-group">
+                    <label>Full Name / Username</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" name="username" placeholder="Enter your username" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <div class="input-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" name="email" placeholder="your@email.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" name="password" placeholder="Create a strong password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">Create Account <i class="fas fa-arrow-right"></i></button>
+            </form>
+
+            <div class="form-footer" style="margin-top:1.2rem;">
+                Already have an account? <a href="{{url_for('login')}}">Sign In</a>
+            </div>
+            <div style="text-align:center;margin-top:0.6rem;">
+                Are you a doctor? <a href="{{url_for('doctor_register')}}"
+                    style="color:var(--primary);font-weight:600;">Register as Doctor</a>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

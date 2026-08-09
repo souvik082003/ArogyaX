@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transforming Healthcare — ArogyaX Blog</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            <a href="#blogs">More Blogs</a>
+            {% if username %}
+            <div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+            </div>
+            {% else %}
+            <a href="{{url_for('login')}}" class="btn-nav">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="page-container">
+        <div style="margin-bottom:1.5rem;"><a href="/" style="color:var(--text-muted);font-size:0.85rem;"><i
+                    class="fas fa-arrow-left"></i> Back to Dashboard</a></div>
+        <div class="page-hero">
+            <div
+                style="color:var(--primary);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+                <i class="fas fa-calendar" style="margin-right:6px;"></i>Dec 25, 2023 &nbsp;·&nbsp; <i
+                    class="fas fa-user" style="margin-right:6px;"></i>Admin</div>
+            <h1>Transforming <span>Healthcare</span></h1>
+            <p>The Human Touch of AI and Telemedicine — how technology is redefining compassionate care.</p>
+        </div>
+
+        <div class="content-card">
+            <p>In the fast-paced world of healthcare, technology has emerged as a guiding light, leading us towards more
+                accessible, efficient, and personalized care. Among the groundbreaking innovations, the amalgamation of
+                Artificial Intelligence (AI) and Telemedicine stands out as a beacon of hope.</p>
+            <h2>The Rise of AI in Healthcare</h2>
+            <p>Artificial Intelligence, once confined to the realms of science fiction, has now become an integral part
+                of our daily lives, and healthcare is no exception. AI's ability to analyze vast datasets and recognize
+                patterns has revolutionized diagnostics and treatment plans, offering a level of precision that was
+                previously unimaginable.</p>
+            <p>In the diagnostic realm, AI algorithms excel at sifting through medical records, lab results, and imaging
+                data with lightning speed. This not only expedites the diagnosis process but also ensures accuracy,
+                reducing the margin of error and improving patient outcomes.</p>
+            <h2>Telemedicine: Bridging Gaps and Bringing Care Closer</h2>
+            <p>Telemedicine breaks down geographical barriers, connecting patients with healthcare providers seamlessly.
+                Especially in the wake of global events that have emphasized the need for remote care, telemedicine has
+                emerged as a vital tool in ensuring continuous healthcare access.</p>
+            <p>Imagine a patient in a remote village consulting with a specialist located hundreds of miles away without
+                extensive travel. Telemedicine makes this a reality, providing timely and convenient healthcare
+                solutions, particularly for those in underserved or rural areas.</p>
+            <h2>The Synergy of AI and Telemedicine</h2>
+            <p>The magic happens when AI and Telemedicine join forces. This combination creates personalized healthcare
+                experiences tailored to individual needs. AI algorithms can analyze a patient's medical history,
+                lifestyle, and genetic makeup to provide recommendations that are not only effective but also
+                considerate of the patient's unique circumstances.</p>
+            <p>From chronic disease management to mental health support, the synergy of AI and Telemedicine is enhancing
+                preventive care and empowering patients to actively participate in their health journey.</p>
+            <h2>Looking Ahead</h2>
+            <p>The future of healthcare lies in a seamless integration of cutting-edge technology and human compassion.
+                Let's embrace these innovations not as replacements but as catalysts for a more interconnected,
+                accessible, and humane healthcare ecosystem—one where the human touch remains at the forefront of
+                healing.</p>
+        </div>
+
+        <div style="text-align:center;margin-top:2rem;">
+            <a href="{{url_for('book_appointment')}}" class="btn btn-primary"><i class="fas fa-calendar-plus"></i> Book
+                a Consultation</a>
+        </div>
+    </div>
+    <section class="footer">
+        <div class="credit">© 2024 <span>ArogyaX</span> — Hospital Management System. All rights reserved.</div>
+    </section>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

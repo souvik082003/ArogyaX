@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holistic Health — ArogyaX Blog</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            {% if username %}<div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+            </div>
+            {% else %}<a href="{{url_for('login')}}" class="btn-nav">Login</a>{% endif %}
+        </nav>
+    </header>
+    <div class="page-container">
+        <div style="margin-bottom:1.5rem;"><a href="/" style="color:var(--text-muted);font-size:0.85rem;"><i
+                    class="fas fa-arrow-left"></i> Back</a></div>
+        <div class="page-hero">
+            <div
+                style="color:var(--primary);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+                <i class="fas fa-spa" style="margin-right:6px;"></i>Wellness</div>
+            <h1>Holistic <span>Health</span></h1>
+            <p>A comprehensive approach to mental, physical, and spiritual wellness for a balanced life.</p>
+        </div>
+        <div class="content-card">
+            <h2>What is Holistic Health?</h2>
+            <p>Holistic health is an approach to life that considers the whole person and how they interact with their
+                environment. It focuses on connection between mind, body, and spirit to achieve optimal health and
+                wellness.</p>
+            <h2>The Four Pillars</h2>
+            <ul>
+                <li><strong>Physical Health</strong> — Regular exercise, proper nutrition, adequate sleep, and
+                    preventive care</li>
+                <li><strong>Mental Health</strong> — Managing stress, emotional resilience, mindfulness and cognitive
+                    well-being</li>
+                <li><strong>Social Health</strong> — Strong relationships, community involvement, emotional support
+                    networks</li>
+                <li><strong>Spiritual Health</strong> — Purpose, meaning, personal values and inner peace</li>
+            </ul>
+            <h2>Practical Steps Towards Holistic Wellness</h2>
+            <p>Start small — incorporate 15 minutes of meditation or mindfulness each day. Improve your diet by adding
+                more whole foods and reducing processed items. Stay connected with loved ones and don't hesitate to seek
+                professional help when needed.</p>
+            <p>Regular health check-ups, stress management techniques, and a positive mindset collectively contribute to
+                holistic wellbeing. ArogyaX supports your journey with expert doctors, AI tools, and a caring
+                community.</p>
+        </div>
+    </div>
+    <section class="footer">
+        <div class="credit">© 2024 <span>ArogyaX</span> — All rights reserved.</div>
+    </section>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

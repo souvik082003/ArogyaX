@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+
+        {% include 'partials/patient_sidebar.html' %}
+
+        <!-- MAIN -->
+        <main class="dashboard-main">
+            <div class="dash-header">
+                <div>
+                    <h1>Patient Dashboard</h1>
+                    <p>Welcome back, <strong>{{ username }}</strong> — here's your health overview</p>
+                </div>
+                <a href="{{url_for('book_appointment')}}" class="btn btn-primary"><i class="fas fa-plus"></i> New
+                    Appointment</a>
+            </div>
+
+            <!-- WELCOME BANNER -->
+            <div class="welcome-banner">
+                <div class="text">
+                    <h2>Good to see you, {{ username }}! 👋</h2>
+                    <p>Manage your appointments, predict diseases, and connect with doctors all in one place.</p>
+                </div>
+                <i class="fas fa-hand-holding-heart icon-big"></i>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Total Appointments</div>
+                        <div class="value">{{ user_appointments|length }}</div>
+                    </div>
+                    <div class="icon-wrap ic-orange"><i class="fas fa-calendar-check"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Approved</div>
+                        <div class="value">{{ user_appointments|selectattr('status','equalto','Approved')|list|length }}
+                        </div>
+                    </div>
+                    <div class="icon-wrap ic-green"><i class="fas fa-check-circle"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Pending</div>
+                        <div class="value">{{ user_appointments|selectattr('status','equalto','Pending')|list|length }}
+                        </div>
+                    </div>
+                    <div class="icon-wrap ic-yellow"><i class="fas fa-clock"></i></div>
+                </div>
+                <div class="stat-card">
+                    <div>
+                        <div class="label">Prescribed</div>
+                        <div class="value">{{ user_appointments|selectattr('status','equalto','Prescribed')|list|length
+                            }}</div>
+                    </div>
+                    <div class="icon-wrap ic-blue"><i class="fas fa-file-prescription"></i></div>
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-bolt" style="color:var(--primary);margin-right:8px;"></i>Quick Actions</h3>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;">
+                    <a href="{{url_for('book_appointment')}}" class="glass-box"
+                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
+                        <i class="fas fa-calendar-plus"
+                            style="font-size:1.8rem;color:var(--primary);margin-bottom:0.7rem;display:block;"></i>
+                        <div style="font-weight:600;font-size:0.875rem;">Book Appointment</div>
+                    </a>
+                    <a href="{{url_for('disease_predict')}}" class="glass-box"
+                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
+                        <i class="fas fa-brain"
+                            style="font-size:1.8rem;color:var(--info);margin-bottom:0.7rem;display:block;"></i>
+                        <div style="font-weight:600;font-size:0.875rem;">Check Symptoms</div>
+                    </a>
+                    <a href="{{url_for('videocall')}}" class="glass-box"
+                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
+                        <i class="fas fa-video"
+                            style="font-size:1.8rem;color:var(--success);margin-bottom:0.7rem;display:block;"></i>
+                        <div style="font-weight:600;font-size:0.875rem;">Video Call</div>
+                    </a>
+                    <a href="{{url_for('braintumor')}}" class="glass-box"
+                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
+                        <i class="fas fa-x-ray"
+                            style="font-size:1.8rem;color:var(--warning);margin-bottom:0.7rem;display:block;"></i>
+                        <div style="font-weight:600;font-size:0.875rem;">Medical Scans</div>
+                    </a>
+                    <a href="{{url_for('vault')}}" class="glass-box"
+                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none; border: 1px solid var(--primary);">
+                        <i class="fas fa-folder-open"
+                            style="font-size:1.8rem;color:var(--primary);margin-bottom:0.7rem;display:block;"></i>
+                        <div style="font-weight:600;font-size:0.875rem;color:var(--primary);">Medical Vault</div>
+                    </a>
+                    <a href="{{url_for('profile')}}" class="glass-box"
+                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
+                        <i class="fas fa-user-circle"
+                            style="font-size:1.8rem;color:var(--primary);margin-bottom:0.7rem;display:block;"></i>
+                        <div style="font-weight:600;font-size:0.875rem;">My Profile</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- APPOINTMENTS TABLE -->
+            <div class="dash-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-list-alt" style="color:var(--primary);margin-right:8px;"></i>My Appointments
+                    </h3>
+                    <a href="{{url_for('book_appointment')}}">+ New Appointment</a>
+                </div>
+
+                {% if user_appointments %}
+                <div class="appt-table-wrap">
+                    <table class="appt-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Doctor Type</th>
+                                <th>Time Slot</th>
+                                <th>Blood Group</th>
+                                <th>Status</th>
+                                <th>Prescription</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in user_appointments %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="name">{{ appt.name }}</span></td>
+                                <td>{{ appt.type_of_doctor }}</td>
+                                <td><i class="fas fa-clock" style="color:var(--text-muted);margin-right:5px;"></i>{{
+                                    appt.time_slot }}</td>
+                                <td><span
+                                        style="background:var(--primary-glow);border:1px solid var(--border-active);padding:2px 8px;border-radius:4px;font-size:0.78rem;color:var(--primary-light);">{{
+                                        appt.blood_group }}</span></td>
+                                <td>
+                                    {% if appt.status == 'Approved' %}
+                                    <span class="badge badge-approved"><i class="fas fa-check"></i> Approved</span>
+                                    {% elif appt.status == 'Pending' %}
+                                    <span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
+                                    {% elif appt.status == 'Prescribed' %}
+                                    <span class="badge badge-prescribed"><i class="fas fa-file-prescription"></i>
+                                        Prescribed</span>
+                                    {% else %}
+                                    <span class="badge badge-rejected">{{ appt.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if appt.status == 'Prescribed' %}
+                                    <div style="display: flex; gap: 8px;">
+                                        <a href="{{url_for('view_prescription_patient', appointment_id=appt['_id'])}}"
+                                            class="btn-xs btn-view"><i class="fas fa-download"></i> PDF</a>
+                                        <a href="https://www.apollopharmacy.in/" target="_blank"
+                                            class="btn-xs" style="background:var(--primary); color:white; border-radius:4px; padding:4px 8px; text-decoration:none;"><i class="fas fa-pills"></i> Order Medicines</a>
+                                    </div>
+                                    {% else %}
+                                    <span style="color:var(--text-muted);font-size:0.8rem;">—</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="appt-table-wrap">
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <p>No appointments yet. <a href="{{url_for('book_appointment')}}"
+                                style="color:var(--primary);">Book your first appointment →</a></p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            <a href="{{url_for('book_appointment')}}">Book Appointment</a>
+            <a href="{{url_for('logout')}}" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem;"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+            <div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>
+                {{ username }}
+            </div>
+        </nav>
+    </header>
+
+    <div class="profile-container">
+        <div style="margin-bottom:1.5rem;">
+            <a href="/" style="color:var(--text-muted);font-size:0.85rem;"><i class="fas fa-arrow-left"></i> Back to
+                Dashboard</a>
+        </div>
+
+        <!-- Profile Header Card -->
+        <div class="profile-card" style="margin-bottom:2rem;">
+            <div class="profile-avatar-big">{{ username[0]|upper }}</div>
+            <div class="profile-info" style="flex:1;">
+                <h2>{{ username }}</h2>
+                <p><i class="fas fa-envelope" style="color:var(--primary);margin-right:6px;"></i>{{ Email }}</p>
+                <div style="display:flex;gap:0.8rem;margin-top:1rem;flex-wrap:wrap;">
+                    <span class="badge badge-approved"><i class="fas fa-user-check"></i> Verified Patient</span>
+                    <span class="badge badge-prescribed"><i class="fas fa-calendar-check"></i> {{
+                        user_appointments|length }} Appointments</span>
+                </div>
+            </div>
+            <div style="flex-shrink:0;">
+                <a href="{{url_for('book_appointment')}}" class="btn btn-primary"><i class="fas fa-calendar-plus"></i>
+                    Book Appointment</a>
+            </div>
+        </div>
+
+        <!-- Appointments History -->
+        <div class="dash-section">
+            <div class="dash-section-header">
+                <h3><i class="fas fa-history" style="color:var(--primary);margin-right:8px;"></i>Appointment History
+                </h3>
+                <a href="{{url_for('book_appointment')}}">+ New Appointment</a>
+            </div>
+
+            {% if user_appointments %}
+            <div class="appt-table-wrap">
+                <table class="appt-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Doctor Type</th>
+                            <th>Time Slot</th>
+                            <th>Blood Group</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Prescription</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appt in user_appointments %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td><span class="name">{{ appt.name }}</span></td>
+                            <td>{{ appt.type_of_doctor }}</td>
+                            <td><i class="fas fa-clock" style="color:var(--text-muted);margin-right:5px;"></i>{{
+                                appt.time_slot }}</td>
+                            <td><span
+                                    style="background:var(--primary-glow);border:1px solid var(--border-active);padding:2px 8px;border-radius:4px;font-size:0.78rem;color:var(--primary-light);">{{
+                                    appt.blood_group }}</span></td>
+                            <td>{{ appt.phone_number }}</td>
+                            <td>
+                                {% if appt.status == 'Approved' %}
+                                <span class="badge badge-approved"><i class="fas fa-check"></i> Approved</span>
+                                {% elif appt.status == 'Pending' %}
+                                <span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
+                                {% elif appt.status == 'Prescribed' %}
+                                <span class="badge badge-prescribed"><i class="fas fa-file-prescription"></i>
+                                    Prescribed</span>
+                                {% else %}
+                                <span class="badge">{{ appt.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if appt.status == 'Prescribed' %}
+                                <a href="{{url_for('view_prescription_patient', appointment_id=appt['_id'])}}"
+                                    class="btn-xs btn-view"><i class="fas fa-download"></i> Download</a>
+                                {% else %}
+                                <span style="color:var(--text-muted);font-size:0.8rem;">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="appt-table-wrap">
+                <div class="empty-state">
+                    <i class="fas fa-calendar-times"></i>
+                    <p>No appointments yet. <a href="{{url_for('book_appointment')}}" style="color:var(--primary);">Book
+                            your first appointment →</a></p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

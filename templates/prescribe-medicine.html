@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescribe Medicine — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            <a href="{{url_for('doctor_patients')}}">My Patients</a>
+            <a href="{{url_for('logout')}}" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem;"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </header>
+
+    <div class="book-container">
+        <div style="margin-bottom:1.5rem;">
+            <a href="{{url_for('doctor_patients')}}" style="color:var(--text-muted);font-size:0.85rem;"><i
+                    class="fas fa-arrow-left"></i> Back to Patients</a>
+        </div>
+
+        <div class="form-card">
+            <h2><i class="fas fa-file-prescription" style="color:var(--primary);margin-right:10px;"></i>Prescribe
+                Medicine</h2>
+            <p class="form-sub">Select medicines to prescribe for the patient. A PDF prescription will be generated.</p>
+
+            <!-- Patient Info -->
+            <div
+                style="background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius-md);padding:1.2rem 1.5rem;margin-bottom:1.5rem;">
+                <div
+                    style="font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:0.8rem;font-weight:700;">
+                    Patient Information</div>
+                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0.8rem;font-size:0.875rem;">
+                    <div><span style="color:var(--text-muted);">Name:</span> <strong>{{ appointment.name }}</strong>
+                    </div>
+                    <div><span style="color:var(--text-muted);">Age:</span> <strong>{{ appointment.age }}</strong></div>
+                    <div><span style="color:var(--text-muted);">Blood Group:</span> <strong>{{ appointment.blood_group
+                            }}</strong></div>
+                    <div><span style="color:var(--text-muted);">Phone:</span> <strong>{{ appointment.phone_number
+                            }}</strong></div>
+                </div>
+            </div>
+
+            <form action="{{url_for('prescribe_medicine', appointment_id=appointment['_id'])}}" method="POST">
+                <div class="form-group">
+                    <label><i class="fas fa-pills" style="color:var(--primary);margin-right:6px;"></i>Select
+                        Medicines</label>
+                    {% for medicine in available_medicines %}
+                    <div class="form-check" style="margin-bottom:0.6rem;">
+                        <input type="checkbox" id="med_{{ loop.index }}" name="medicines[]" value="{{ medicine }}">
+                        <label for="med_{{ loop.index }}"
+                            style="font-size:0.9rem;font-weight:500;color:var(--text-primary);">{{ medicine }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+                    <button type="submit" class="btn-submit" style="flex:1;">Generate Prescription PDF <i
+                            class="fas fa-file-pdf"></i></button>
+                    <a href="{{url_for('doctor_patients')}}" class="btn btn-outline"
+                        style="flex:1;justify-content:center;">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

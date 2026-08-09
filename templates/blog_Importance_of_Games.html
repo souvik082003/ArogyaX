@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importance of Sports — ArogyaX Blog</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Dashboard</a>
+            {% if username %}<div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+            </div>
+            {% else %}<a href="{{url_for('login')}}" class="btn-nav">Login</a>{% endif %}
+        </nav>
+    </header>
+    <div class="page-container">
+        <div style="margin-bottom:1.5rem;"><a href="/" style="color:var(--text-muted);font-size:0.85rem;"><i
+                    class="fas fa-arrow-left"></i> Back</a></div>
+        <div class="page-hero">
+            <div
+                style="color:var(--primary);font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+                <i class="fas fa-running" style="margin-right:6px;"></i>Fitness</div>
+            <h1>Importance of <span>Sports & Exercise</span></h1>
+            <p>Why physical activity is an essential pillar of long-term health and mental wellness.</p>
+        </div>
+        <div class="content-card">
+            <h2>Physical Activity and Health</h2>
+            <p>Regular physical activity is one of the most important things you can do for your health. It helps
+                control weight, reduces the risk of disease, strengthens bones and muscles, and improves mental health
+                and mood.</p>
+            <h2>Benefits of Regular Exercise</h2>
+            <ul>
+                <li>Reduces risk of cardiovascular disease and type 2 diabetes</li>
+                <li>Improves mental health — reduces depression and anxiety</li>
+                <li>Strengthens bones and reduces osteoporosis risk</li>
+                <li>Boosts immune system and increases longevity</li>
+                <li>Improves sleep quality and energy levels</li>
+            </ul>
+            <h2>Team Sports & Social Health</h2>
+            <p>Beyond physical benefits, team sports foster teamwork, discipline, and social connections. They build
+                character, teach resilience, and provide a sense of community — all contributing to mental and emotional
+                health.</p>
+            <p>Even 30 minutes of moderate-intensity activity five times a week can significantly impact your health.
+                Start small — take the stairs, go for evening walks, or join a local sports club.</p>
+        </div>
+    </div>
+    <section class="footer">
+        <div class="credit">© 2024 <span>ArogyaX</span> — All rights reserved.</div>
+    </section>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>

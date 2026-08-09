@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img src="../static/images/arogyax_logo.png" alt="Logo">
+                <div>
+                    <div>ArogyaX</div>
+                    <div class="logo-sub">Admin Console</div>
+                </div>
+            </div>
+            <div class="sidebar-section">Management</div>
+            <nav class="sidebar-nav">
+                <a href="#stats" onclick="showSection('stats')" class="active" id="nav-stats"><i
+                        class="fas fa-chart-bar"></i> Overview</a>
+                <a href="#doctors-section" onclick="showSection('doctors-section')" id="nav-doctors-section"><i
+                        class="fas fa-user-md"></i> Doctors</a>
+                <a href="#patients-section" onclick="showSection('patients-section')" id="nav-patients-section"><i
+                        class="fas fa-users"></i> Patients</a>
+                <a href="#appointments-section" onclick="showSection('appointments-section')"
+                    id="nav-appointments-section"><i class="fas fa-calendar-alt"></i> Appointments</a>
+            </nav>
+            <div class="sidebar-section">Quick Links</div>
+            <nav class="sidebar-nav">
+                <a href="{{url_for('seed_demo')}}"><i class="fas fa-database"></i> Reload Demo Data</a>
+                <a href="{{url_for('doctors_directory')}}"><i class="fas fa-stethoscope"></i> Doctor Directory</a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="avatar admin-avatar"><i class="fas fa-user-shield"></i></div>
+                    <div class="info">
+                        <div class="name">{{ admin_user.username }}</div>
+                        <div class="role">System Admin</div>
+                    </div>
+                </div>
+                <nav class="sidebar-nav" style="margin-top:0.4rem;">
+                    <a href="{{url_for('admin_logout')}}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="dashboard-main">
+            <div class="dash-header">
+                <div>
+                    <div class="admin-badge" style="margin-bottom:0.4rem;"><i class="fas fa-shield-alt"></i> Admin Mode
+                    </div>
+                    <h1>System Dashboard</h1>
+                    <p>Welcome back, {{ admin_user.username }}. Here's a full overview of ArogyaX.</p>
+                </div>
+            </div>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}{% for cat, msg in messages %}
+            <div class="alert alert-{{ 'success' if cat == 'success' else 'danger' }}" style="margin-bottom:1rem;">
+                <i class="fas fa-{{ 'check-circle' if cat == 'success' else 'exclamation-circle' }}"></i><span>{{ msg
+                    }}</span>
+            </div>
+            {% endfor %}{% endif %}
+            {% endwith %}
+
+            <!-- ── OVERVIEW STATS ── -->
+            <div id="stats">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:rgba(232,88,26,0.15);"><i class="fas fa-users"
+                                style="color:#E8581A;"></i></div>
+                        <div class="stat-value">{{ total_users }}</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:rgba(99,179,237,0.15);"><i class="fas fa-user-md"
+                                style="color:#63B3ED;"></i></div>
+                        <div class="stat-value">{{ total_doctors }}</div>
+                        <div class="stat-label">Doctors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:rgba(72,199,142,0.15);"><i class="fas fa-hospital-user"
+                                style="color:#48C78E;"></i></div>
+                        <div class="stat-value">{{ total_patients }}</div>
+                        <div class="stat-label">Patients</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:rgba(255,213,79,0.15);"><i class="fas fa-calendar-alt"
+                                style="color:#FFD54F;"></i></div>
+                        <div class="stat-value">{{ total_appointments }}</div>
+                        <div class="stat-label">Appointments</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:rgba(250,119,87,0.15);"><i class="fas fa-clock"
+                                style="color:#FA7757;"></i></div>
+                        <div class="stat-value">{{ pending }}</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background:rgba(72,199,142,0.15);"><i class="fas fa-check-circle"
+                                style="color:#48C78E;"></i></div>
+                        <div class="stat-value">{{ approved }}</div>
+                        <div class="stat-label">Approved</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── DOCTORS TABLE ── -->
+            <div class="dash-section" id="doctors-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-user-md" style="color:var(--primary);margin-right:8px;"></i>All Doctors ({{
+                        all_doctors|length }})</h3>
+                </div>
+                <div class="appt-table-wrap">
+                    <table class="appt-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Photo</th>
+                                <th>Doctor</th>
+                                <th>Email</th>
+                                <th>Specialization</th>
+                                <th>Experience</th>
+                                <th>Fee (₹)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for doc in all_doctors %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    {% if doc.profile_photo %}
+                                    <img src="../static/{{ doc.profile_photo }}" class="table-avatar-img" alt="photo">
+                                    {% else %}
+                                    <div class="avatar" style="width:36px;height:36px;font-size:0.9rem;">{{
+                                        doc.username[0]|upper }}</div>
+                                    {% endif %}
+                                </td>
+                                <td><span class="name">{{ doc.username }}</span></td>
+                                <td style="font-size:0.8rem;">{{ doc.email }}</td>
+                                <td><span class="badge badge-info"
+                                        style="background:rgba(99,179,237,0.12);color:#63B3ED;border-color:#63B3ED;">{{
+                                        doc.type_of_doctor or '—' }}</span></td>
+                                <td>{{ doc.years_of_experience or 0 }} yrs</td>
+                                <td>{{ doc.consultation_fee or 0 }}</td>
+                                <td>
+                                    {% if doc.is_active %}
+                                    <span class="badge badge-approved"><i class="fas fa-circle"
+                                            style="font-size:0.5rem;"></i> Active</span>
+                                    {% else %}
+                                    <span class="badge badge-pending"><i class="fas fa-circle"
+                                            style="font-size:0.5rem;"></i> Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display:flex;gap:6px;">
+                                        <form action="{{url_for('admin_toggle_user', user_id=doc['_id'])}}" method="POST"
+                                            style="display:inline;">
+                                            <button type="submit" class="btn-xs"
+                                                style="background:rgba(99,179,237,0.15);color:#63B3ED;border:1px solid #63B3ED;"><i
+                                                    class="fas fa-toggle-{{ 'off' if doc.is_active else 'on' }}"></i> {{
+                                                'Deactivate' if doc.is_active else 'Activate' }}</button>
+                                        </form>
+                                        <form action="{{url_for('admin_delete_user', user_id=doc['_id'])}}" method="POST"
+                                            style="display:inline;"
+                                            onsubmit="return confirm('Delete Dr. {{ doc.username }}?')">
+                                            <button type="submit" class="btn-xs btn-danger"><i class="fas fa-trash"></i>
+                                                Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── PATIENTS TABLE ── -->
+            <div class="dash-section" id="patients-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-users" style="color:var(--primary);margin-right:8px;"></i>All Patients ({{
+                        all_patients|length }})</h3>
+                </div>
+                <div class="appt-table-wrap">
+                    <table class="appt-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Patient</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Appointments</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pat in all_patients %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td>
+                                    <div style="display:flex;align-items:center;gap:10px;">
+                                        <div class="avatar" style="width:34px;height:34px;font-size:0.8rem;">{{
+                                            pat.username[0]|upper }}</div>
+                                        <span class="name">{{ pat.username }}</span>
+                                    </div>
+                                </td>
+                                <td style="font-size:0.8rem;">{{ pat.email }}</td>
+                                <td style="font-size:0.8rem;">{{ pat.phone or '—' }}</td>
+                                <td><span class="badge badge-prescribed">{{ pat.appointments|length }} appts</span></td>
+                                <td>
+                                    {% if pat.is_active %}
+                                    <span class="badge badge-approved">Active</span>
+                                    {% else %}
+                                    <span class="badge badge-pending">Inactive</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div style="display:flex;gap:6px;">
+                                        <form action="{{url_for('admin_toggle_user', user_id=pat['_id'])}}" method="POST"
+                                            style="display:inline;">
+                                            <button type="submit" class="btn-xs"
+                                                style="background:rgba(99,179,237,0.15);color:#63B3ED;border:1px solid #63B3ED;"><i
+                                                    class="fas fa-toggle-{{ 'off' if pat.is_active else 'on' }}"></i></button>
+                                        </form>
+                                        <form action="{{url_for('admin_delete_user', user_id=pat['_id'])}}" method="POST"
+                                            style="display:inline;"
+                                            onsubmit="return confirm('Delete patient {{ pat.username }}?')">
+                                            <button type="submit" class="btn-xs btn-danger"><i
+                                                    class="fas fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── ALL APPOINTMENTS TABLE ── -->
+            <div class="dash-section" id="appointments-section">
+                <div class="dash-section-header">
+                    <h3><i class="fas fa-calendar-alt" style="color:var(--primary);margin-right:8px;"></i>All
+                        Appointments ({{ all_appointments|length }})</h3>
+                </div>
+                <div class="appt-table-wrap">
+                    <table class="appt-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Patient</th>
+                                <th>Age</th>
+                                <th>Blood</th>
+                                <th>Doctor Type</th>
+                                <th>Time Slot</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for appt in all_appointments %}
+                            <tr>
+                                <td>{{ loop.index }}</td>
+                                <td><span class="name">{{ appt.name }}</span></td>
+                                <td>{{ appt.age }}</td>
+                                <td><span
+                                        style="background:var(--primary-glow);border:1px solid var(--border-active);padding:2px 8px;border-radius:4px;font-size:0.75rem;color:var(--primary-light);">{{
+                                        appt.blood_group }}</span></td>
+                                <td>{{ appt.type_of_doctor }}</td>
+                                <td style="font-size:0.8rem;">{{ appt.time_slot }}</td>
+                                <td style="font-size:0.78rem;">
+                                    <div>{{ appt.phone_number }}</div>
+                                    <div style="color:var(--text-muted);">{{ appt.email }}</div>
+                                </td>
+                                <td>
+                                    {% if appt.status == 'Approved' %}<span class="badge badge-approved"><i
+                                            class="fas fa-check"></i> Approved</span>
+                                    {% elif appt.status == 'Pending' %}<span class="badge badge-pending"><i
+                                            class="fas fa-clock"></i> Pending</span>
+                                    {% elif appt.status == 'Prescribed' %}<span class="badge badge-prescribed"><i
+                                            class="fas fa-file-prescription"></i> Prescribed</span>
+                                    {% else %}<span class="badge">{{ appt.status }}</span>{% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../static/js/script.js"></script>
+    <script>
+        // Sidebar tab navigation for admin
+        function showSection(id) {
+            // All sections shown by default (no hiding) — just scroll to section
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+            document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+            const nav = document.getElementById('nav-' + id);
+            if (nav) nav.classList.add('active');
+        }
+    </script>
+</body>
+
+</html>

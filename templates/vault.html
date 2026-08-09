@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Records Vault — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        {% set patient = user %}
+        {% include 'partials/patient_sidebar.html' %}
+        
+        <main class="dashboard-main">
+            <header class="dashboard-header">
+                <div class="header-search"></div>
+                <div class="header-actions">
+                    <div class="user-pill">
+                        <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+                    </div>
+                    <a href="{{url_for('logout')}}" class="btn-outline" style="padding:6px 12px;font-size:0.85rem; border-radius:8px;"><i class="fas fa-sign-out-alt"></i></a>
+                </div>
+            </header>
+            
+            <div class="page-container" style="padding: 2rem;">
+                <div class="dash-header">
+                    <div>
+                        <h1>Medical <span style="color:var(--primary);">Vault</span></h1>
+                        <p>Securely upload and manage your lab reports, X-rays, and medical history.</p>
+                    </div>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}{% for cat, msg in messages %}
+                <div class="alert alert-{{ 'success' if cat == 'success' else 'danger' }}" style="margin-bottom:1rem;">
+                    <i class="fas fa-{{ 'check-circle' if cat == 'success' else 'exclamation-circle' }}"></i><span>{{ msg }}</span>
+                </div>
+                {% endfor %}{% endif %}
+                {% endwith %}
+
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start;">
+                    
+                    <!-- Upload Form -->
+                    <div class="form-card">
+                        <h3 style="margin-bottom:1rem; font-size:1.1rem;"><i class="fas fa-cloud-upload-alt" style="color:var(--primary);margin-right:8px;"></i>Upload New Record</h3>
+                        <form action="{{url_for('vault')}}" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label>Record Title</label>
+                                <div class="input-icon">
+                                    <i class="fas fa-heading"></i>
+                                    <input type="text" name="title" placeholder="e.g. Blood Test - Jan 2024" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Attach File</label>
+                                <div class="upload-box" onclick="document.getElementById('recordInput').click()" style="min-height:100px; padding: 1.5rem;">
+                                    <i class="fas fa-file-medical"></i>
+                                    <p style="font-size:0.85rem; margin-top:0.5rem;">Click to select PDF or Image</p>
+                                    <input type="file" id="recordInput" name="record_file" accept=".pdf,image/*" style="display:none;" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-submit" style="width:100%;">Upload to Vault <i class="fas fa-lock"></i></button>
+                        </form>
+                    </div>
+
+                    <!-- Records List -->
+                    <div class="form-card" style="padding: 1.5rem;">
+                        <h3 style="margin-bottom:1rem; font-size:1.1rem;"><i class="fas fa-folder" style="color:var(--primary);margin-right:8px;"></i>My Uploaded Records</h3>
+                        
+                        {% if user.records and user.records|length > 0 %}
+                            <div style="display:flex; flex-direction:column; gap:1rem;">
+                            {% for record in user.records|reverse %}
+                                <div class="glass" style="padding: 1rem; display:flex; justify-content:space-between; align-items:center;">
+                                    <div style="display:flex; align-items:center; gap: 1rem;">
+                                        <div style="width:40px; height:40px; background:var(--primary-glow); border-radius:8px; display:flex; align-items:center; justify-content:center; color:var(--primary);">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div>
+                                            <div style="font-weight:600; font-size:0.95rem;">{{ record.title }}</div>
+                                            <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;"><i class="fas fa-clock"></i> {{ record.uploaded_at.strftime('%b %d, %Y') if record.uploaded_at else 'Recent' }}</div>
+                                        </div>
+                                    </div>
+                                    <a href="../static/{{ record.filepath }}" target="_blank" class="btn-outline" style="padding: 6px 12px; font-size: 0.8rem;"><i class="fas fa-eye"></i> View</a>
+                                </div>
+                            {% endfor %}
+                            </div>
+                        {% else %}
+                            <div style="text-align:center; padding: 3rem 1rem; border: 1px dashed var(--border); border-radius:12px; color:var(--text-muted);">
+                                <i class="fas fa-box-open" style="font-size:2rem; margin-bottom:1rem; opacity:0.5;"></i>
+                                <p>Your vault is empty.<br/>Upload your first medical record.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+    <script>
+        document.getElementById('recordInput').addEventListener('change', function() {
+            const uploadBox = this.closest('.upload-box');
+            if (this.files[0]) {
+                const icon = uploadBox.querySelector('i');
+                const text = uploadBox.querySelector('p');
+                icon.className = 'fas fa-check-circle';
+                icon.style.color = 'var(--primary)';
+                text.textContent = 'Selected: ' + this.files[0].name;
+            }
+        });
+    </script>
+</body>
+</html>

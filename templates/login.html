@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+
+    <!-- Dynamic Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+    </div>
+
+    <!-- Centered Glass Card -->
+    <div class="glass-auth-container">
+        <div class="glass-card">
+            
+            <div class="brand-center">
+                <img src="../static/images/arogyax_logo.png" alt="ArogyaX Logo">
+                <h2>Welcome Back</h2>
+                <p>Sign in to your health dashboard</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-msg flash-{{ category }}" style="margin-bottom: 1.5rem;">
+                    <i class="fas fa-exclamation-circle"></i> {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form action="{{url_for('login')}}" method="POST">
+                
+                <div class="floating-group">
+                    <input type="text" name="username" id="username" placeholder=" " required>
+                    <i class="fas fa-user input-icon"></i>
+                    <label for="username">Username</label>
+                </div>
+                
+                <div class="floating-group">
+                    <input type="password" name="password" id="pwd" placeholder=" " required>
+                    <i class="fas fa-lock input-icon"></i>
+                    <label for="pwd">Password</label>
+                </div>
+                
+                <div class="form-check" style="margin-bottom: 1.5rem;">
+                    <input type="checkbox" id="showPwd" onclick="document.getElementById('pwd').type=this.checked?'text':'password'">
+                    <label for="showPwd">Show Password</label>
+                </div>
+                
+                <button type="submit" class="btn-glow">Sign In <i class="fas fa-arrow-right"></i></button>
+            </form>
+
+            <div class="form-divider" style="margin-top: 2rem;"><span>New to ArogyaX?</span></div>
+            <div class="form-footer" style="margin-bottom: 1.5rem;">
+                Register as a <a href="{{url_for('register')}}">Patient</a> &nbsp;|&nbsp; <a href="{{url_for('doctor_register')}}">Doctor</a>
+            </div>
+            
+            <div style="text-align:center; margin-bottom: 1.5rem;">
+                <a href="{{url_for('admin_login')}}" class="back-link" style="color: #10B981;"><i class="fas fa-shield-alt"></i> Admin Portal</a>
+            </div>
+            
+            <div style="text-align:center;">
+                <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Home</a>
+            </div>
+            
+        </div>
+    </div>
+
+</body>
+</html>

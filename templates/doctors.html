@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Doctors — ArogyaX</title>
+    <link rel="icon" href="../static/images/arogyax_logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <header class="header">
+        <a href="/" class="logo">
+            <img src="../static/images/arogyax_logo.png" alt="Logo">
+            <span class="brand-name">Arogya<span>X</span></span>
+        </a>
+        <nav class="navbar">
+            <a href="/">Home</a>
+            <a href="{{url_for('doctors_directory')}}" style="color:var(--primary);">Doctors</a>
+            {% if username %}
+            <a href="{{url_for('book_appointment')}}" class="btn btn-primary"
+                style="padding:7px 18px;font-size:0.85rem;"><i class="fas fa-calendar-plus"></i> Book</a>
+            <div class="user-pill">
+                <div class="avatar">{{ username[0]|upper }}</div>{{ username }}
+            </div>
+            {% else %}
+            <a href="{{url_for('login')}}" class="btn btn-outline" style="padding:7px 16px;font-size:0.85rem;">Login</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <div class="page-container">
+        <div class="page-hero">
+            <h1>Meet Our <span>Specialist Doctors</span></h1>
+            <p>Our team of expert physicians is dedicated to providing you with the highest quality care.</p>
+        </div>
+
+        <!-- Filter bar -->
+        {% if specializations %}
+        <div class="filter-bar">
+            <a href="{{url_for('doctors_directory')}}"
+                class="filter-chip {{ 'active' if not current_specialization }}">All</a>
+            {% for spec in specializations %}
+            <a href="{{url_for('doctors_directory', specialization=spec)}}"
+                class="filter-chip {{ 'active' if current_specialization == spec }}">{{ spec }}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Doctors grid -->
+        {% if doctors %}
+        <div class="doctors-grid">
+            {% for doc in doctors %}
+            <div class="doctor-card">
+                <div class="doctor-card-top">
+                    {% if doc.profile_photo %}
+                    <img src="../static/{{ doc.profile_photo }}" alt="Dr. {{ doc.username }}" class="doctor-photo">
+                    {% else %}
+                    <div class="doctor-avatar-placeholder">{{ doc.username[0]|upper }}</div>
+                    {% endif %}
+                    <div class="doctor-available-badge"><i class="fas fa-circle"
+                            style="font-size:0.5rem;margin-right:4px;color:#48C78E;"></i>Available</div>
+                </div>
+                <div class="doctor-card-body">
+                    <h3>Dr. {{ doc.username }}</h3>
+                    <div class="doctor-spec"><i class="fas fa-stethoscope"></i> {{ doc.type_of_doctor or 'Specialist' }}
+                    </div>
+                    {% if doc.bio %}
+                    <p class="doctor-bio">{{ doc.bio[:120] }}{% if doc.bio|length > 120 %}...{% endif %}</p>
+                    {% endif %}
+                    <div class="doctor-meta">
+                        <div class="doctor-meta-item"><i class="fas fa-clock"></i><span>{{ doc.years_of_experience or 0
+                                }} yrs exp</span></div>
+                        <div class="doctor-meta-item"><i class="fas fa-rupee-sign"></i><span>₹{{ doc.consultation_fee or
+                                0 }} / visit</span></div>
+                    </div>
+                    {% if doc.availability %}
+                    <div class="doctor-availability"><i class="fas fa-calendar-alt"></i> {{ doc.availability }}</div>
+                    {% endif %}
+                </div>
+                <div class="doctor-card-footer">
+                    {% if username %}
+                    <a href="{{url_for('book_appointment')}}?specialization={{ doc.type_of_doctor }}"
+                        class="btn btn-primary" style="width:100%;justify-content:center;"><i
+                            class="fas fa-calendar-plus"></i> Book Appointment</a>
+                    {% else %}
+                    <a href="{{url_for('login')}}" class="btn btn-primary" style="width:100%;justify-content:center;"><i
+                            class="fas fa-sign-in-alt"></i> Login to Book</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state" style="margin:3rem auto;">
+            <i class="fas fa-user-md"></i>
+            <p>No doctors found{% if current_specialization %} for {{ current_specialization }}{% endif %}.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <section class="footer">
+        <div class="credit">© 2024 <span>ArogyaX</span> — Hospital Management System. All rights reserved.</div>
+    </section>
+    <script src="../static/js/script.js"></script>
+</body>
+
+</html>
