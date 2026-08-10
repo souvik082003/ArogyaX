@@ -127,6 +127,8 @@
                                             class="btn-xs btn-approve"><i class="fas fa-check"></i> Approve</a>
                                         {% endif %}
                                         {% if appt.status == 'Approved' %}
+                                        <a href="{{url_for('videocall', appointment_id=appt['_id'])}}"
+                                            class="btn-xs" style="background:var(--success); color:white; border-radius:4px; padding:4px 8px; text-decoration:none; white-space:nowrap;"><i class="fas fa-video"></i> Join Call</a>
                                         <a href="{{url_for('prescribe_medicine', appointment_id=appt['_id'])}}"
                                             class="btn-xs btn-prescribe"><i class="fas fa-prescription"></i>
                                             Prescribe</a>

@@ -89,12 +89,7 @@
                             style="font-size:1.8rem;color:var(--info);margin-bottom:0.7rem;display:block;"></i>
                         <div style="font-weight:600;font-size:0.875rem;">Check Symptoms</div>
                     </a>
-                    <a href="{{url_for('videocall')}}" class="glass-box"
-                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
-                        <i class="fas fa-video"
-                            style="font-size:1.8rem;color:var(--success);margin-bottom:0.7rem;display:block;"></i>
-                        <div style="font-weight:600;font-size:0.875rem;">Video Call</div>
-                    </a>
+
                     <a href="{{url_for('braintumor')}}" class="glass-box"
                         style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
                         <i class="fas fa-x-ray"
@@ -162,7 +157,12 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    {% if appt.status == 'Prescribed' %}
+                                    {% if appt.status == 'Approved' %}
+                                    <div style="display: flex; gap: 8px;">
+                                        <a href="{{url_for('videocall', appointment_id=appt['_id'])}}"
+                                            class="btn-xs" style="background:var(--success); color:white; border-radius:4px; padding:4px 8px; text-decoration:none; white-space:nowrap;"><i class="fas fa-video"></i> Join Call</a>
+                                    </div>
+                                    {% elif appt.status == 'Prescribed' %}
                                     <div style="display: flex; gap: 8px;">
                                         <a href="{{url_for('view_prescription_patient', appointment_id=appt['_id'])}}"
                                             class="btn-xs btn-view"><i class="fas fa-download"></i> PDF</a>

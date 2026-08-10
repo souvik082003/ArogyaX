@@ -600,6 +600,46 @@ def doctor_patients():
     user_str['_id'] = str(user['_id'])
     return render_template('doctor-patients.html', doctor=user_str, appointments=appts, username=username, file_list=[])
 
+def draw_background(canvas, doc, doctor_name, doctor_qualification):
+    # Colors
+    teal = colors.HexColor('#2bb2a6')
+    grey = colors.HexColor('#e2e8f0')
+
+    canvas.saveState()
+    
+    # Header Background
+    canvas.setFillColor(teal)
+    canvas.rect(0, 792 - 120, 612, 120, fill=1, stroke=0)
+
+    # Doctor Text
+    canvas.setFillColor(colors.white)
+    canvas.setFont("Helvetica-Bold", 26)
+    canvas.drawString(40, 792 - 50, f"Dr. {doctor_name}")
+    canvas.setFont("Helvetica", 11)
+    canvas.drawString(40, 792 - 75, doctor_qualification.upper())
+
+    # Circle on the right
+    canvas.setFillColor(colors.white)
+    canvas.circle(530, 792 - 60, 45, fill=1, stroke=0)
+    canvas.setFillColor(teal)
+    canvas.setFont("Helvetica-Bold", 40)
+    canvas.drawCentredString(530, 792 - 75, "+")
+
+    # Footer Background
+    canvas.setFillColor(grey)
+    canvas.rect(0, 0, 612, 40, fill=1, stroke=0)
+
+    # Footer Text
+    canvas.setFillColor(colors.HexColor('#334155'))
+    canvas.setFont("Helvetica-Bold", 12)
+    canvas.drawString(40, 15, "AROGYAX CLINIC")
+    
+    canvas.setFont("Helvetica", 10)
+    canvas.drawString(250, 15, "24 Dummy Street Area")
+    canvas.drawString(450, 15, "+12-345 678 9012")
+
+    canvas.restoreState()
+
 @app.route('/prescribe-medicine/<appointment_id>', methods=['GET', 'POST'])
 @login_required
 def prescribe_medicine(appointment_id):
@@ -616,77 +656,100 @@ def prescribe_medicine(appointment_id):
         buffer = BytesIO()
         styles = getSampleStyleSheet()
         
-        # Define styles
-        title_style = ParagraphStyle('Title', parent=styles['Heading1'], fontName='Helvetica-Bold', fontSize=24, spaceAfter=6, textColor=colors.HexColor('#16a34a'), alignment=1)
-        subtitle_style = ParagraphStyle('Subtitle', parent=styles['Normal'], fontName='Helvetica', fontSize=10, textColor=colors.HexColor('#6b7280'), alignment=1, spaceAfter=20)
-        normal_style = styles['Normal']
-        normal_style.fontSize = 11
-        normal_style.leading = 14
-        
         content = []
         
-        # Header (Clinic Info)
-        content.append(Paragraph("<b>ArogyaX Clinic</b>", title_style))
-        content.append(Paragraph("123 Health Avenue, Medical District, Cityville • Ph: +91 800-123-4567<br/>Email: contact@arogyax.com • Web: www.arogyax.com", subtitle_style))
-        content.append(HRFlowable(width="100%", thickness=1, color=colors.HexColor('#e5e7eb'), spaceBefore=0, spaceAfter=20))
-        
         # Patient Details Table
-        patient_data = [
-            [Paragraph("<b>Patient Name:</b>", normal_style), Paragraph(appt['name'], normal_style), Paragraph("<b>Date:</b>", normal_style), Paragraph(datetime.utcnow().strftime('%d %b %Y'), normal_style)],
-            [Paragraph("<b>Age:</b>", normal_style), Paragraph(str(appt['age']), normal_style), Paragraph("<b>Blood Group:</b>", normal_style), Paragraph(appt['blood_group'], normal_style)],
-            [Paragraph("<b>Phone:</b>", normal_style), Paragraph(appt['phone_number'], normal_style), Paragraph("<b>Doctor:</b>", normal_style), Paragraph(f"Dr. {doctor['username']}", normal_style)]
-        ]
-        patient_table = Table(patient_data, colWidths=[100, 200, 80, 120])
-        patient_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, -1), colors.HexColor('#f9fafb')),
-            ('PADDING', (0, 0), (-1, -1), 8),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-            ('BOX', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
-            ('INNERGRID', (0, 0), (-1, -1), 1, colors.HexColor('#e5e7eb')),
+        normal_style = styles['Normal']
+        normal_style.fontSize = 11
+        normal_style.textColor = colors.HexColor('#334155')
+        
+        p_name = Paragraph("Patient Name:", normal_style)
+        p_name_val = Paragraph(f"<b>{appt['name']}</b>", normal_style)
+        p_date = Paragraph("Date:", normal_style)
+        p_date_val = Paragraph(f"<b>{datetime.utcnow().strftime('%d %b %Y')}</b>", normal_style)
+        
+        p_age = Paragraph("Age:", normal_style)
+        p_age_val = Paragraph(f"<b>{appt['age']}</b>", normal_style)
+        p_gender = Paragraph("Gender:", normal_style)
+        p_gender_val = Paragraph("<b>N/A</b>", normal_style)
+        p_weight = Paragraph("Weight:", normal_style)
+        p_weight_val = Paragraph("<b>____</b>", normal_style)
+        
+        p_diag = Paragraph("Diagnosis:", normal_style)
+        p_diag_val = Paragraph("<b>___________________________________________</b>", normal_style)
+        
+        # Row 1: Name and Date
+        patient_data_1 = [[p_name, p_name_val, p_date, p_date_val]]
+        t1 = Table(patient_data_1, colWidths=[80, 260, 40, 152])
+        t1.setStyle(TableStyle([
+            ('LINEBELOW', (1, 0), (1, 0), 1, colors.HexColor('#94a3b8')),
+            ('LINEBELOW', (3, 0), (3, 0), 1, colors.HexColor('#94a3b8')),
+            ('VALIGN', (0, 0), (-1, -1), 'BOTTOM'),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
         ]))
-        content.append(patient_table)
-        content.append(Spacer(1, 25))
+        content.append(t1)
+        content.append(Spacer(1, 15))
         
-        # Rx Symbol & Medicines
-        content.append(Paragraph("<b>Rx</b>", ParagraphStyle('Rx', fontName='Helvetica-Bold', fontSize=22, textColor=colors.HexColor('#16a34a'), spaceAfter=15)))
+        # Row 2: Age, Gender, Weight
+        patient_data_2 = [[p_age, p_age_val, p_gender, p_gender_val, p_weight, p_weight_val]]
+        t2 = Table(patient_data_2, colWidths=[30, 90, 50, 90, 50, 222])
+        t2.setStyle(TableStyle([
+            ('LINEBELOW', (1, 0), (1, 0), 1, colors.HexColor('#94a3b8')),
+            ('LINEBELOW', (3, 0), (3, 0), 1, colors.HexColor('#94a3b8')),
+            ('LINEBELOW', (5, 0), (5, 0), 1, colors.HexColor('#94a3b8')),
+            ('VALIGN', (0, 0), (-1, -1), 'BOTTOM'),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+        ]))
+        content.append(t2)
+        content.append(Spacer(1, 15))
         
-        # Medicines Table
-        meds_data = [["Medicine Name", "Dosage / Instructions"]]
+        # Row 3: Diagnosis
+        patient_data_3 = [[p_diag, p_diag_val]]
+        t3 = Table(patient_data_3, colWidths=[65, 467])
+        t3.setStyle(TableStyle([
+            ('LINEBELOW', (1, 0), (1, 0), 1, colors.HexColor('#94a3b8')),
+            ('VALIGN', (0, 0), (-1, -1), 'BOTTOM'),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 2),
+        ]))
+        content.append(t3)
+        content.append(Spacer(1, 30))
+        
+        # Rx Symbol
+        rx_style = ParagraphStyle('Rx', fontName='Helvetica-Bold', fontSize=32, textColor=colors.HexColor('#1e293b'), spaceAfter=20)
+        content.append(Paragraph("Rx", rx_style))
+        
+        # Medicines (Simple list instead of full grid table to match minimalist design)
+        med_style = ParagraphStyle('Med', parent=styles['Normal'], fontName='Helvetica-Bold', fontSize=12, textColor=colors.HexColor('#334155'), spaceAfter=5)
+        inst_style = ParagraphStyle('Inst', parent=styles['Normal'], fontName='Helvetica', fontSize=10, textColor=colors.HexColor('#64748b'), leftIndent=15, spaceAfter=15)
+        
         for idx, m in enumerate(selected_medicines):
-            meds_data.append([f"{idx+1}. {m}", "As directed by physician"])
+            content.append(Paragraph(f"{idx+1}. {m}", med_style))
+            content.append(Paragraph("Take as directed by physician", inst_style))
             
-        meds_table = Table(meds_data, colWidths=[250, 250])
-        meds_table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#16a34a')),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('PADDING', (0, 0), (-1, -1), 10),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-            ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor('#e5e7eb')),
-            ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9fafb')])
-        ]))
-        content.append(meds_table)
         content.append(Spacer(1, 40))
         
-        # Footer / Signature
-        signature_data = [
-            ["", "_______________________"],
-            ["", f"Dr. {doctor['username']}"],
-            ["", f"{doctor.get('type_of_doctor', 'Physician')}"]
+        # Signature
+        sig_data = [
+            ["_______________________"],
+            ["Signature"]
         ]
-        sig_table = Table(signature_data, colWidths=[300, 200])
+        sig_table = Table(sig_data, colWidths=[200])
         sig_table.setStyle(TableStyle([
-            ('ALIGN', (1, 0), (1, -1), 'CENTER'),
-            ('FONTNAME', (1, 1), (1, 1), 'Helvetica-Bold'),
-            ('TEXTCOLOR', (1, 1), (1, -1), colors.HexColor('#374151')),
+            ('ALIGN', (0, 0), (0, -1), 'RIGHT'),
+            ('FONTNAME', (0, 1), (0, 1), 'Helvetica-Bold'),
+            ('TEXTCOLOR', (0, 1), (0, 1), colors.HexColor('#64748b')),
         ]))
-        content.append(sig_table)
+        # Wrap in a table to align to the right
+        main_sig_table = Table([["", sig_table]], colWidths=[332, 200])
+        content.append(main_sig_table)
         
-        # Generate PDF
-        pdf = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=40, bottomMargin=40)
-        pdf.build(content)
+        # Generate PDF with custom background
+        pdf = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=40, leftMargin=40, topMargin=160, bottomMargin=60)
+        
+        def canvas_maker(canvas, doc):
+            draw_background(canvas, doc, doctor['username'], doctor.get('type_of_doctor', 'Physician'))
+            
+        pdf.build(content, onFirstPage=canvas_maker, onLaterPages=canvas_maker)
 
         os.makedirs(os.path.join("static", "prescriptions"), exist_ok=True)
         pdf_filename = f"prescription_{appointment_id}.pdf"
@@ -894,11 +957,38 @@ def cataract():
 def policy():
     return render_template('privacy-policy.html')
 
-@app.route('/videocall')
+@app.route('/videocall/<appointment_id>')
 @login_required
-def videocall():
+def videocall(appointment_id):
     user = get_current_user()
-    return render_template('videocall.html', username=user['username'])
+    if not user:
+        return redirect(url_for('login'))
+        
+    try:
+        appt = appointments_col.find_one({'_id': ObjectId(appointment_id)})
+    except:
+        flash('Invalid appointment ID.', 'error')
+        return redirect(url_for('index'))
+        
+    if not appt:
+        flash('Appointment not found.', 'error')
+        return redirect(url_for('index'))
+        
+    if appt.get('status') != 'Approved':
+        flash('Video call is only available for approved appointments.', 'error')
+        return redirect(url_for('index'))
+        
+    # Verify authorization
+    if user.get('role') == 'patient':
+        if str(appt['user_id']) != str(user['_id']):
+            flash('Unauthorized access.', 'error')
+            return redirect(url_for('index'))
+    elif user.get('role') == 'doctor':
+        if appt.get('type_of_doctor') != user.get('type_of_doctor'):
+             flash('Unauthorized access.', 'error')
+             return redirect(url_for('index'))
+             
+    return render_template('videocall.html', username=user['username'], appointment_id=appointment_id)
 
 @app.route('/admin')
 def admin():
