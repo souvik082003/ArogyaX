@@ -52,7 +52,7 @@ load_dotenv()
 
 # ── Flask app ──────────────────────────────────────────────────
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'manipal-sevak-default-secret-2024')
+app.secret_key = os.getenv('SECRET_KEY', 'arogyax-default-secret-2024')
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'static', 'uploads', 'profile_photos')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
@@ -83,7 +83,7 @@ def connect_mongo():
         import certifi
         mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000, tlsCAFile=certifi.where())
         mongo_client.server_info()  # triggers connection test
-        db = mongo_client['manipal_sevak']
+        db = mongo_client['arogyax']
         users_col = db['users']
         appointments_col = db['appointments']
         # Create unique index on username
@@ -104,7 +104,7 @@ if GEMINI_AVAILABLE and GEMINI_API_KEY and not GEMINI_API_KEY.startswith('AIzaSy
     try:
         import certifi
         gemini_client = google_genai.Client(api_key=GEMINI_API_KEY)
-        gemini_model = 'gemini-2.5-flash'
+        gemini_model = 'gemini-flash-latest'
         print("✅ Gemini AI connected successfully.")
     except Exception as e:
         print(f"⚠️  Gemini AI init failed: {e}")
@@ -456,8 +456,11 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username'].strip()
-        password = request.form['password']
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        if not username or not password:
+            flash('Please enter both username and password.', 'error')
+            return render_template('login.html')
         if users_col is None:
             flash('MongoDB not connected. Fill MONGO_URI in .env', 'error')
             return render_template('login.html')
@@ -902,8 +905,8 @@ def braintumor():
     if request.method == 'POST' and 'scan_image' in request.files:
         file = request.files['scan_image']
         if file and allowed_file(file.filename):
-            os.makedirs('/tmp/manipal_scans', exist_ok=True)
-            filepath = f'/tmp/manipal_scans/{secure_filename(file.filename)}'
+            os.makedirs('/tmp/arogyax_scans', exist_ok=True)
+            filepath = f'/tmp/arogyax_scans/{secure_filename(file.filename)}'
             file.save(filepath)
             gemini_result = analyze_scan_with_gemini(filepath, 'brain')
     return render_template('brain-tumor.html', username=username,
@@ -922,8 +925,8 @@ def lung():
     if request.method == 'POST' and 'scan_image' in request.files:
         file = request.files['scan_image']
         if file and allowed_file(file.filename):
-            os.makedirs('/tmp/manipal_scans', exist_ok=True)
-            filepath = f'/tmp/manipal_scans/{secure_filename(file.filename)}'
+            os.makedirs('/tmp/arogyax_scans', exist_ok=True)
+            filepath = f'/tmp/arogyax_scans/{secure_filename(file.filename)}'
             file.save(filepath)
             gemini_result = analyze_scan_with_gemini(filepath, 'lung')
     return render_template('lung.html', username=username, role=role, user=user_str,
@@ -942,8 +945,8 @@ def cataract():
     if request.method == 'POST' and 'scan_image' in request.files:
         file = request.files['scan_image']
         if file and allowed_file(file.filename):
-            os.makedirs('/tmp/manipal_scans', exist_ok=True)
-            filepath = f'/tmp/manipal_scans/{secure_filename(file.filename)}'
+            os.makedirs('/tmp/arogyax_scans', exist_ok=True)
+            filepath = f'/tmp/arogyax_scans/{secure_filename(file.filename)}'
             file.save(filepath)
             gemini_result = analyze_scan_with_gemini(filepath, 'cataract')
     return render_template('cataract.html', username=username, role=role, user=user_str,

@@ -1,197 +1,261 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Dashboard — ArogyaX</title>
     <link rel="icon" href="../static/images/arogyax_logo.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" />
     <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="../static/css/patient-dashboard-light.css">
 </head>
+<body class="light-dashboard">
 
-<body>
-    <div class="dashboard-layout">
+    {% include 'partials/patient_sidebar.html' %}
 
-        {% include 'partials/patient_sidebar.html' %}
-
-        <!-- MAIN -->
-        <main class="dashboard-main">
-            <div class="dash-header">
-                <div>
-                    <h1>Patient Dashboard</h1>
-                    <p>Welcome back, <strong>{{ username }}</strong> — here's your health overview</p>
-                </div>
-                <a href="{{url_for('book_appointment')}}" class="btn btn-primary"><i class="fas fa-plus"></i> New
-                    Appointment</a>
+    <main class="dashboard-main-light">
+        <!-- TOP NAVIGATION BAR -->
+        <header class="dash-topbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search doctors, appointments, health records...">
             </div>
+            <div class="topbar-actions">
+                <div class="notif-bell">
+                    <i class="far fa-bell"></i>
+                    <span class="badge"></span>
+                </div>
+                <div class="user-profile-dropdown">
+                    <div class="avatar">{{ username[0]|upper }}</div>
+                    <div class="info">
+                        <span class="name">{{ username }}</span>
+                        <span class="role">Patient</span>
+                    </div>
+                    <i class="fas fa-chevron-down" style="color: #94A3B8; font-size: 0.8rem;"></i>
+                </div>
+            </div>
+        </header>
 
+        <div class="dash-content">
             <!-- WELCOME BANNER -->
-            <div class="welcome-banner">
+            <div class="welcome-banner-modern">
                 <div class="text">
-                    <h2>Good to see you, {{ username }}! 👋</h2>
-                    <p>Manage your appointments, predict diseases, and connect with doctors all in one place.</p>
+                    <div class="greeting">Good morning,</div>
+                    <h1>{{ username }} <span style="font-size: 2rem;">👋</span></h1>
+                    <p>Here's your health overview and recent activities.</p>
                 </div>
-                <i class="fas fa-hand-holding-heart icon-big"></i>
+                <div class="quote">
+                    Small steps<br>today, a healthier<br>tomorrow.
+                </div>
+                <div class="illustration-graphic">
+                    <i class="fas fa-hospital" style="font-size: 8rem; color: #FFFFFF; opacity: 0.8; z-index: 2; position: absolute; bottom: 0;"></i>
+                    <i class="fas fa-tree" style="font-size: 4rem; color: #10B981; position: absolute; bottom: 10px; left: 100px; z-index: 3;"></i>
+                    <i class="fas fa-tree" style="font-size: 5rem; color: #34D399; position: absolute; bottom: 5px; right: 20px; z-index: 1;"></i>
+                    <i class="fas fa-cloud" style="font-size: 3rem; color: #FFFFFF; position: absolute; top: 20px; left: 60px; opacity: 0.6;"></i>
+                </div>
             </div>
 
-            <!-- STATS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div>
-                        <div class="label">Total Appointments</div>
+            <!-- STATS GRID -->
+            <div class="stats-grid-modern">
+                <div class="stat-card-modern">
+                    <div class="icon-wrap bg-blue"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="info">
+                        <div class="label">TOTAL APPOINTMENTS</div>
                         <div class="value">{{ user_appointments|length }}</div>
+                        <div class="trend text-success"><i class="fas fa-arrow-up"></i> 1 upcoming</div>
                     </div>
-                    <div class="icon-wrap ic-orange"><i class="fas fa-calendar-check"></i></div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
                 </div>
-                <div class="stat-card">
-                    <div>
-                        <div class="label">Approved</div>
-                        <div class="value">{{ user_appointments|selectattr('status','equalto','Approved')|list|length }}
-                        </div>
+                
+                <div class="stat-card-modern">
+                    <div class="icon-wrap bg-green"><i class="fas fa-check-circle"></i></div>
+                    <div class="info">
+                        <div class="label">APPROVED</div>
+                        <div class="value">{{ user_appointments|selectattr('status','equalto','Approved')|list|length }}</div>
+                        <div class="trend text-success"><i class="fas fa-arrow-up"></i> 2 this month</div>
                     </div>
-                    <div class="icon-wrap ic-green"><i class="fas fa-check-circle"></i></div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
                 </div>
-                <div class="stat-card">
-                    <div>
-                        <div class="label">Pending</div>
-                        <div class="value">{{ user_appointments|selectattr('status','equalto','Pending')|list|length }}
-                        </div>
+                
+                <div class="stat-card-modern">
+                    <div class="icon-wrap bg-yellow"><i class="far fa-clock"></i></div>
+                    <div class="info">
+                        <div class="label">PENDING</div>
+                        <div class="value">{{ user_appointments|selectattr('status','equalto','Pending')|list|length }}</div>
+                        <div class="trend text-muted">Awaiting confirmation</div>
                     </div>
-                    <div class="icon-wrap ic-yellow"><i class="fas fa-clock"></i></div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
                 </div>
-                <div class="stat-card">
-                    <div>
-                        <div class="label">Prescribed</div>
-                        <div class="value">{{ user_appointments|selectattr('status','equalto','Prescribed')|list|length
-                            }}</div>
+                
+                <div class="stat-card-modern">
+                    <div class="icon-wrap bg-red"><i class="fas fa-pills"></i></div>
+                    <div class="info">
+                        <div class="label">PRESCRIPTIONS</div>
+                        <div class="value">{{ user_appointments|selectattr('status','equalto','Prescribed')|list|length }}</div>
+                        <div class="trend text-muted">Active medications</div>
                     </div>
-                    <div class="icon-wrap ic-blue"><i class="fas fa-file-prescription"></i></div>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
                 </div>
             </div>
 
             <!-- QUICK ACTIONS -->
-            <div class="dash-section">
-                <div class="dash-section-header">
-                    <h3><i class="fas fa-bolt" style="color:var(--primary);margin-right:8px;"></i>Quick Actions</h3>
+            <div class="section-title">
+                <div class="title-left">
+                    <h3><i class="fas fa-bolt" style="color: #F59E0B;"></i> Quick Actions</h3>
+                    <p>Everything you need, in one place.</p>
                 </div>
-                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;">
-                    <a href="{{url_for('book_appointment')}}" class="glass-box"
-                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
-                        <i class="fas fa-calendar-plus"
-                            style="font-size:1.8rem;color:var(--primary);margin-bottom:0.7rem;display:block;"></i>
-                        <div style="font-weight:600;font-size:0.875rem;">Book Appointment</div>
-                    </a>
-                    <a href="{{url_for('disease_predict')}}" class="glass-box"
-                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
-                        <i class="fas fa-brain"
-                            style="font-size:1.8rem;color:var(--info);margin-bottom:0.7rem;display:block;"></i>
-                        <div style="font-weight:600;font-size:0.875rem;">Check Symptoms</div>
-                    </a>
-
-                    <a href="{{url_for('braintumor')}}" class="glass-box"
-                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
-                        <i class="fas fa-x-ray"
-                            style="font-size:1.8rem;color:var(--warning);margin-bottom:0.7rem;display:block;"></i>
-                        <div style="font-weight:600;font-size:0.875rem;">Medical Scans</div>
-                    </a>
-                    <a href="{{url_for('vault')}}" class="glass-box"
-                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none; border: 1px solid var(--primary);">
-                        <i class="fas fa-folder-open"
-                            style="font-size:1.8rem;color:var(--primary);margin-bottom:0.7rem;display:block;"></i>
-                        <div style="font-weight:600;font-size:0.875rem;color:var(--primary);">Medical Vault</div>
-                    </a>
-                    <a href="{{url_for('profile')}}" class="glass-box"
-                        style="text-align:center;padding:1.4rem 1rem;text-decoration:none;">
-                        <i class="fas fa-user-circle"
-                            style="font-size:1.8rem;color:var(--primary);margin-bottom:0.7rem;display:block;"></i>
-                        <div style="font-weight:600;font-size:0.875rem;">My Profile</div>
-                    </a>
-                </div>
+                <a href="{{url_for('book_appointment')}}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
             </div>
 
-            <!-- APPOINTMENTS TABLE -->
-            <div class="dash-section">
-                <div class="dash-section-header">
-                    <h3><i class="fas fa-list-alt" style="color:var(--primary);margin-right:8px;"></i>My Appointments
-                    </h3>
-                    <a href="{{url_for('book_appointment')}}">+ New Appointment</a>
-                </div>
+            <div class="quick-actions-row">
+                <a href="{{url_for('book_appointment')}}" class="quick-action-card">
+                    <div class="icon bg-blue-light"><i class="far fa-calendar-plus text-blue"></i></div>
+                    <h4>Book Appointment</h4>
+                    <p>Schedule a visit<br>with specialists</p>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                
+                <a href="{{url_for('disease_predict')}}" class="quick-action-card">
+                    <div class="icon bg-green-light"><i class="fas fa-stethoscope text-green"></i></div>
+                    <h4>Symptom Checker</h4>
+                    <p>Check your symptoms<br>with AI</p>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                
+                <a href="{{url_for('braintumor')}}" class="quick-action-card">
+                    <div class="icon bg-purple-light"><i class="far fa-image text-purple"></i></div>
+                    <h4>Medical Scans</h4>
+                    <p>Analyze your scans<br>with AI</p>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                
+                <a href="{{url_for('vault')}}" class="quick-action-card">
+                    <div class="icon bg-orange-light"><i class="far fa-folder-open text-orange"></i></div>
+                    <h4>Health Records</h4>
+                    <p>View and manage<br>your records</p>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </a>
+                
+                <a href="{{url_for('profile')}}" class="quick-action-card">
+                    <div class="icon bg-red-light"><i class="far fa-user text-red"></i></div>
+                    <h4>My Profile</h4>
+                    <p>Update your<br>information</p>
+                    <i class="fas fa-chevron-right arrow"></i>
+                </a>
+            </div>
 
-                {% if user_appointments %}
-                <div class="appt-table-wrap">
-                    <table class="appt-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Name</th>
-                                <th>Doctor Type</th>
-                                <th>Time Slot</th>
-                                <th>Blood Group</th>
-                                <th>Status</th>
-                                <th>Prescription</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for appt in user_appointments %}
-                            <tr>
-                                <td>{{ loop.index }}</td>
-                                <td><span class="name">{{ appt.name }}</span></td>
-                                <td>{{ appt.type_of_doctor }}</td>
-                                <td><i class="fas fa-clock" style="color:var(--text-muted);margin-right:5px;"></i>{{
-                                    appt.time_slot }}</td>
-                                <td><span
-                                        style="background:var(--primary-glow);border:1px solid var(--border-active);padding:2px 8px;border-radius:4px;font-size:0.78rem;color:var(--primary-light);">{{
-                                        appt.blood_group }}</span></td>
-                                <td>
-                                    {% if appt.status == 'Approved' %}
-                                    <span class="badge badge-approved"><i class="fas fa-check"></i> Approved</span>
-                                    {% elif appt.status == 'Pending' %}
-                                    <span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>
-                                    {% elif appt.status == 'Prescribed' %}
-                                    <span class="badge badge-prescribed"><i class="fas fa-file-prescription"></i>
-                                        Prescribed</span>
-                                    {% else %}
-                                    <span class="badge badge-rejected">{{ appt.status }}</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if appt.status == 'Approved' %}
-                                    <div style="display: flex; gap: 8px;">
-                                        <a href="{{url_for('videocall', appointment_id=appt['_id'])}}"
-                                            class="btn-xs" style="background:var(--success); color:white; border-radius:4px; padding:4px 8px; text-decoration:none; white-space:nowrap;"><i class="fas fa-video"></i> Join Call</a>
+            <!-- BOTTOM GRID -->
+            <div class="bottom-grid">
+                <!-- Left: Recent Health Activity -->
+                <div class="column-left">
+                    <div class="card-modern" style="height: 100%;">
+                        <div class="card-header">
+                            <h3><i class="far fa-clock text-blue"></i> Recent Health Activity</h3>
+                            <a href="{{url_for('vault')}}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        
+                        <div class="timeline">
+                            {% if user_appointments %}
+                                {% for appt in user_appointments[:4] %}
+                                <div class="timeline-item">
+                                    <div class="dot"></div>
+                                    <div class="date">{{ appt.created_at.strftime('%d %b %Y') if appt.created_at else 'Recent' }}</div>
+                                    <div class="icon"><i class="fas fa-stethoscope"></i></div>
+                                    <div class="details">
+                                        <h4>Doctor Consultation</h4>
+                                        <p>{{ appt.type_of_doctor }} - {{ appt.status }}</p>
                                     </div>
-                                    {% elif appt.status == 'Prescribed' %}
-                                    <div style="display: flex; gap: 8px;">
-                                        <a href="{{url_for('view_prescription_patient', appointment_id=appt['_id'])}}"
-                                            class="btn-xs btn-view"><i class="fas fa-download"></i> PDF</a>
-                                        <a href="https://www.apollopharmacy.in/" target="_blank"
-                                            class="btn-xs" style="background:var(--primary); color:white; border-radius:4px; padding:4px 8px; text-decoration:none;"><i class="fas fa-pills"></i> Order Medicines</a>
+                                    <div class="status badge-{{ appt.status|lower }}">{{ appt.status }}</div>
+                                    <i class="fas fa-chevron-right arrow" style="color:#CBD5E1; font-size:0.8rem; margin-left: 8px;"></i>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="timeline-item">
+                                    <div class="dot"></div>
+                                    <div class="date">Today</div>
+                                    <div class="icon"><i class="fas fa-user-plus"></i></div>
+                                    <div class="details">
+                                        <h4>Account Created</h4>
+                                        <p>Welcome to ArogyaX!</p>
                                     </div>
-                                    {% else %}
-                                    <span style="color:var(--text-muted);font-size:0.8rem;">—</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% else %}
-                <div class="appt-table-wrap">
-                    <div class="empty-state">
-                        <i class="fas fa-calendar-times"></i>
-                        <p>No appointments yet. <a href="{{url_for('book_appointment')}}"
-                                style="color:var(--primary);">Book your first appointment →</a></p>
+                                    <div class="status badge-approved">Completed</div>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
-                {% endif %}
+
+                <!-- Middle: Journey & Insights -->
+                <div class="column-middle">
+                    <div class="card-modern mb-1">
+                        <div class="card-header">
+                            <h3><i class="fas fa-chart-line text-blue"></i> Your Health Journey</h3>
+                            <a href="#" class="view-all">See Progress <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        <p class="subtitle">Track your healthcare journey</p>
+                        
+                        <div class="stepper">
+                            <div class="step">
+                                <div class="circle bg-blue"><i class="fas fa-stethoscope"></i></div>
+                                <div class="label">Symptoms<br>Checked</div>
+                                <div class="count">2</div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step">
+                                <div class="circle bg-purple"><i class="far fa-image"></i></div>
+                                <div class="label">Scans<br>Analyzed</div>
+                                <div class="count">1</div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step">
+                                <div class="circle bg-green"><i class="fas fa-file-medical"></i></div>
+                                <div class="label">Reports<br>Uploaded</div>
+                                <div class="count">3</div>
+                            </div>
+                            <div class="line"></div>
+                            <div class="step">
+                                <div class="circle bg-orange"><i class="far fa-calendar-check"></i></div>
+                                <div class="label">Appointments<br>Completed</div>
+                                <div class="count">{{ user_appointments|length }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-modern">
+                        <div class="card-header">
+                            <h3><i class="far fa-lightbulb text-orange"></i> Health Insights</h3>
+                            <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                        <p class="subtitle">Based on your recent activity</p>
+                        
+                        <ul class="insights-list">
+                            <li><i class="fas fa-check-circle text-green"></i> No critical issues detected in recent assessments.</li>
+                            <li><i class="fas fa-info-circle text-blue"></i> Your health parameters appear to be stable.</li>
+                            <li><i class="fas fa-exclamation-triangle text-orange"></i> Follow up with your doctor if symptoms persist.</li>
+                            <li><i class="fas fa-star text-purple"></i> Keep up with regular checkups for better health.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Right: Tip & Promo -->
+                <div class="column-right">
+                    <div class="card-modern health-tip-card mb-1">
+                        <h3><i class="fas fa-leaf"></i> Health Tip</h3>
+                        <p>Stay hydrated, maintain a balanced diet, and keep track of your health regularly.</p>
+                        <div class="illustration"><i class="fas fa-seedling"></i></div>
+                    </div>
+                    
+                    <div class="card-modern promo-card">
+                        <h3>Your Health<br>Our Priority</h3>
+                        <p>AI-powered insights. Personalized care. A healthier you.</p>
+                        <div class="heart-icon"><i class="fas fa-heartbeat"></i></div>
+                        <br>
+                        <a href="{{url_for('vault')}}" class="btn-white">Explore Your Health <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
             </div>
-        </main>
-    </div>
 
-    <script src="../static/js/script.js"></script>
+        </div>
+    </main>
 </body>
-
 </html>

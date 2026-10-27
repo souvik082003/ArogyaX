@@ -86,4 +86,6 @@ ENV/
 .spyderproject
 
 # Rope project settings
-.ropeproject
+.ropeproject.DS_Store
+static/.DS_Store
+static/uploads/
